@@ -1,0 +1,255 @@
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #1f2029;
+    color: #ffeba7;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+    body.light-mode {
+        background-color: #f5f5f5;
+        color: #1f2029;
+    }
+
+.top-bar {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 9999;
+}
+
+.user-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 28px;
+    color: #ffd700;
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 55px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #2b2e38;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 10px 0;
+    min-width: 160px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    text-align: left;
+    z-index: 2000;
+}
+
+    .dropdown-menu a {
+        display: block;
+        padding: 10px 20px;
+        color: #ffeba7;
+        text-decoration: none;
+    }
+
+        .dropdown-menu a:hover {
+            background-color: #444;
+        }
+
+.welcome h2 {
+    font-weight: 700;
+    color: #ffeba7;
+}
+
+.welcome p {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.btn-primary {
+    background-color: #ffeba7;
+    border: none;
+    color: #1f2029;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-radius: 25px;
+    padding: 10px 20px;
+}
+
+    .btn-primary:hover {
+        background-color: #000;
+        color: #ffeba7;
+    }
+
+body.light-mode .btn-primary {
+    background-color: #000;
+    color: #ffeba7;
+}
+
+    body.light-mode .btn-primary:hover {
+        background-color: #ffeba7;
+        color: #1f2029;
+    }
+
+.btn-group button {
+    border-radius: 25px;
+    padding: 8px 20px;
+    margin: 0 4px;
+    font-weight: 600;
+    border: 2px solid #ffeba7;
+    background-color: transparent;
+    color: #ffeba7;
+    transition: all 0.3s ease;
+}
+
+    .btn-group button.active {
+        background-color: #ffeba7;
+        color: #1f2029;
+        border-color: #ffeba7;
+    }
+
+body.light-mode .btn-group button {
+    border-color: #000;
+    color: #000;
+}
+
+    body.light-mode .btn-group button.active {
+        background-color: #000;
+        color: #ffeba7;
+        border-color: #000;
+    }
+
+.randevu-box {
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    backdrop-filter: blur(8px);
+    transition: transform 0.2s ease, background-color 0.3s;
+}
+
+    .randevu-box:hover {
+        transform: translateY(-5px);
+    }
+
+body.light-mode .randevu-box {
+    background-color: #ffffff;
+    color: #1f2029;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: inherit;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: inherit;
+    margin-bottom: 5px;
+}
+
+.iptal-btn {
+    float: right;
+    margin-top: 10px;
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background-color: #dc3545;
+    border: none;
+    color: #fff;
+}
+
+    .iptal-btn:hover {
+        background-color: #b02a37;
+    }
+
+body.light-mode .welcome h2 {
+    color: #1f2029;
+}
+
+body.light-mode .btn-primary {
+    background-color: #007bff; 
+    color: #fff; 
+}
+
+    body.light-mode .btn-primary:hover {
+        background-color: #0056b3;
+        color: #fff;
+    }
+
+body:not(.light-mode) .btn-group .btn-outline-primary:hover {
+    background-color: #000; 
+    color: #ffeba7;
+    border-color: #ffeba7;
+}
+
+body:not(.light-mode) .btn-group .btn-outline-primary.active {
+    background-color: #000;
+    color: #ffeba7;
+    border-color: #ffeba7;
+}
+body.yazi-buyuk * {
+    font-size: 1.5em !important;
+}
+body.large-text {
+    font-size: 1.6rem;
+}
+
+    body.large-text .btn,
+    body.large-text input,
+    body.large-text .card-text,
+    body.large-text .randevu-box,
+    body.large-text .btn-group button {
+        font-size: 1.5rem;
+    }
+
+    body.large-text .welcome h2 {
+        font-size: 2.4rem; /* Baþlýk daha büyük */
+    }
+
+    body.large-text .welcome p {
+        font-size: 1.8rem; /* Alt açýklama yazýsý */
+    }
+
+    body.large-text .btn {
+        padding: 16px 32px;
+    }
+
+    body.large-text .btn-group button {
+        padding: 14px 28px;
+    }
+    body.large-text .card-title {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+.card-title i, .card-text i {
+    margin-right: 8px;
+}
+body.large-text .dropdown-menu a {
+    font-size: 1.3rem;
+    padding: 12px 24px;
+}
+
+body.large-text .dropdown-menu {
+    min-width: 200px;
+}
+    body.large-text .dropdown-menu i {
+        font-size: 1.5rem;
+        margin-right: 8px;
+    }
+.randevu-box.gecmis {
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+
+
+

@@ -1,0 +1,396 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System.Data.SqlClient;
+using HastaneSistemi.Models;
+using System;
+using System.Collections.Generic;
+using System.Text.Json;
+using System.Reflection;
+
+public class Doktor
+{
+    public int DoktorID { get; set; }
+    public string AdSoyad { get; set; }
+    public string Bolum { get; set; }
+}
+
+namespace HastaneSistemi.Controllers
+{
+    public class HastaController : Controller
+    {
+        private readonly string _connectionString = "Data Source=127.0.0.1,1433;Initial Catalog=HastaneDB;User ID=sa;Password=12345;TrustServerCertificate=True;";
+
+        public IActionResult HastaPanel()
+        {
+            string email = HttpContext.Session.GetString("Email");
+            if (string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("Index", "Login");
+            }
+
+            RandevuViewModel randevu = null;
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                // TC'yi al
+                SqlCommand cmdTc = new SqlCommand("SELECT TcKimlikNo, YaziBuyuk FROM Hastalar WHERE Email = @p1", conn);
+                cmdTc.Parameters.AddWithValue("@p1", email);
+                SqlDataReader drTc = cmdTc.ExecuteReader();
+
+                string tc = null;
+                bool yaziBuyuk = false;
+
+                if (drTc.Read())
+                {
+                    tc = drTc["TcKimlikNo"].ToString();
+                    yaziBuyuk = Convert.ToBoolean(drTc["YaziBuyuk"]);
+                }
+                drTc.Close();
+
+                // Yazı büyüklüğü bilgisini session'a ata
+                HttpContext.Session.SetString("YaziBuyuk", yaziBuyuk.ToString());
+
+                if (!string.IsNullOrEmpty(tc))
+                {
+                    SqlCommand cmd = new SqlCommand("SELECT TOP 1 * FROM Randevular WHERE TcKimlikNo = @p1 ORDER BY Tarih, Saat", conn);
+                    cmd.Parameters.AddWithValue("@p1", tc);
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    if (dr.Read())
+                    {
+                        randevu = new RandevuViewModel
+                        {
+                            RandevuID = Convert.ToInt32(dr["RandevuID"]),
+                            Tarih = Convert.ToDateTime(dr["Tarih"]),
+                            Saat = dr["Saat"].ToString(),
+                            Bolum = dr["Bolum"].ToString(),
+                            DoktorAd = GetDoktorAdi(Convert.ToInt32(dr["DoktorID"]))
+                        };
+                    }
+                    dr.Close();
+                }
+            }
+
+            ViewBag.Randevu = randevu;
+            return View();
+        }
+
+
+        private string GetDoktorAdi(int doktorID)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("SELECT AdSoyad FROM Doktorlar WHERE DoktorID = @p1", conn);
+                cmd.Parameters.AddWithValue("@p1", doktorID);
+                return cmd.ExecuteScalar()?.ToString() ?? "Bilinmiyor";
+            }
+        }
+
+
+
+
+        public IActionResult RandevuAl()
+        {
+            return View();
+        }
+
+        public JsonResult DoktorlariGetir()
+        {
+            List<Doktor> doktorlar = new List<Doktor>();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("SELECT DoktorID, AdSoyad, Bolum FROM Doktorlar", conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    doktorlar.Add(new Doktor
+                    {
+                        DoktorID = Convert.ToInt32(reader["DoktorID"]),
+                        AdSoyad = reader["AdSoyad"].ToString(),
+                        Bolum = reader["Bolum"].ToString()
+                    });
+                }
+                reader.Close();
+            }
+            return Json(doktorlar);
+        }
+
+
+
+
+        public IActionResult Ayarlar(string returnUrl)
+        {
+            string email = HttpContext.Session.GetString("Email");
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("Index", "Login");
+            }
+
+            HastaBilgileri model = null;
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("SELECT AdSoyad, TcKimlikNo, Email, DogumTarihi, Sifre, TemaModu, YaziBuyuk FROM Hastalar WHERE Email = @p1", conn);
+                cmd.Parameters.AddWithValue("@p1", email);
+                SqlDataReader dr = cmd.ExecuteReader();
+                if (dr.Read())
+                {
+                    model = new HastaBilgileri
+                    {
+                        AdSoyad = dr["AdSoyad"].ToString(),
+                        TC = dr["TcKimlikNo"].ToString(),
+                        Email = dr["Email"].ToString(),
+                        DogumTarihi = Convert.ToDateTime(dr["DogumTarihi"]),
+                        Sifre = dr["Sifre"].ToString(),
+                        TemaModu = dr["TemaModu"].ToString(),
+                        YaziBuyuk = Convert.ToBoolean(dr["YaziBuyuk"])
+                    };
+                    HttpContext.Session.SetString("YaziBuyuk", model.YaziBuyuk ? "true" : "false");
+                }
+                dr.Close();
+            }
+
+            ViewBag.ReturnUrl = returnUrl ?? "/Hasta/HastaPanel"; 
+            return View(model);
+        }
+
+
+        [HttpPost]
+        public IActionResult AyarlarGuncelle(HastaBilgileri model)
+        {
+            string email = HttpContext.Session.GetString("Email");
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("Index", "Login");
+            }
+
+            model.TemaModu = Request.Form["TemaModu"];
+            string yaziBuyukDegeri = Request.Form["YaziBuyuk"];
+            bool yaziBuyuk = yaziBuyukDegeri == "true";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(@"
+            UPDATE Hastalar 
+            SET Email = @p1, DogumTarihi = @p2, Sifre = @p3, TemaModu = @p4, YaziBuyuk = @p5 
+            WHERE Email = @p6", conn);
+
+                cmd.Parameters.AddWithValue("@p1", model.Email);
+                cmd.Parameters.AddWithValue("@p2", model.DogumTarihi);
+                cmd.Parameters.AddWithValue("@p3", model.Sifre);
+                cmd.Parameters.AddWithValue("@p4", model.TemaModu);
+                cmd.Parameters.AddWithValue("@p5", yaziBuyuk);
+                cmd.Parameters.AddWithValue("@p6", email);
+
+                cmd.ExecuteNonQuery();
+            }
+
+            HttpContext.Session.SetString("TemaModu", model.TemaModu);
+            HttpContext.Session.SetString("YaziBuyuk", yaziBuyuk.ToString());
+
+            return RedirectToAction("Ayarlar");
+        }
+
+
+
+        [HttpPost]
+        public IActionResult TemaDegistir([FromBody] JsonElement data)
+        {
+            string yeniTema = data.GetProperty("tema").GetString();
+            string email = HttpContext.Session.GetString("Email");
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return Unauthorized();
+            }
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("UPDATE Hastalar SET TemaModu = @p1 WHERE Email = @p2", conn);
+                cmd.Parameters.AddWithValue("@p1", yeniTema);
+                cmd.Parameters.AddWithValue("@p2", email);
+                cmd.ExecuteNonQuery();
+            }
+
+            HttpContext.Session.SetString("TemaModu", yeniTema);
+
+            return Ok();
+        }
+        [HttpPost]
+        public IActionResult RandevuOlustur([FromBody] RandevuModel model)
+        {
+            // Daha önceden o saatte randevu var mı?
+            bool randevuVar = false;
+
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                var cmdKontrol = new SqlCommand(@"
+            SELECT COUNT(*) FROM Randevular
+            WHERE DoktorID = @doktorID AND Tarih = @tarih AND Saat = @saat", conn);
+                cmdKontrol.Parameters.AddWithValue("@doktorID", model.DoktorID);
+                cmdKontrol.Parameters.AddWithValue("@tarih", model.Tarih);
+                cmdKontrol.Parameters.AddWithValue("@saat", model.Saat);
+
+                int count = (int)cmdKontrol.ExecuteScalar();
+                randevuVar = count > 0;
+
+                if (randevuVar)
+                    return BadRequest("Bu saat dolu.");
+
+                // Randevuyu kaydet
+                var cmdEkle = new SqlCommand(@"
+            INSERT INTO Randevular (TcKimlikNo, Bolum, DoktorID, Tarih, Saat)
+            VALUES (@tc, @bolum, @doktorID, @tarih, @saat)", conn);
+                cmdEkle.Parameters.AddWithValue("@tc", HttpContext.Session.GetString("TcKimlikNo"));
+                cmdEkle.Parameters.AddWithValue("@bolum", model.Bolum);
+                cmdEkle.Parameters.AddWithValue("@doktorID", model.DoktorID);
+                cmdEkle.Parameters.AddWithValue("@tarih", model.Tarih);
+                cmdEkle.Parameters.AddWithValue("@saat", model.Saat);
+                cmdEkle.ExecuteNonQuery();
+            }
+
+            return Ok();
+        }
+
+
+        public JsonResult RandevulariGetir()
+        {
+            string email = HttpContext.Session.GetString("Email");
+            List<RandevuViewModel> randevular = new List<RandevuViewModel>();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                // Email'den hastanın TcKimlikNo'sunu al
+                SqlCommand cmdTc = new SqlCommand("SELECT TcKimlikNo FROM Hastalar WHERE Email = @p1", conn);
+                cmdTc.Parameters.AddWithValue("@p1", email);
+                string tc = cmdTc.ExecuteScalar()?.ToString();
+
+                if (!string.IsNullOrEmpty(tc))
+                {
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM Randevular WHERE TcKimlikNo = @tc", conn);
+                    cmd.Parameters.AddWithValue("@tc", tc);
+
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        int doktorID = Convert.ToInt32(dr["DoktorID"]);
+                        string doktorAd = GetDoktorAdi(doktorID);
+
+                        randevular.Add(new RandevuViewModel
+                        {
+                            RandevuID = Convert.ToInt32(dr["RandevuID"]),
+                            Tarih = Convert.ToDateTime(dr["Tarih"]),
+                            Saat = dr["Saat"].ToString(),
+                            Bolum = dr["Bolum"].ToString(),
+                            DoktorAd = doktorAd
+                        });
+                    }
+                    dr.Close();
+                }
+            }
+
+            return Json(randevular);
+        }
+        [HttpPost]
+        public IActionResult RandevuIptalEt([FromBody] JsonElement data)
+        {
+            if (!data.TryGetProperty("randevuID", out JsonElement idElement))
+                return BadRequest("Geçersiz veri");
+
+            // HATA BURADAYDI! Element string geliyorsa string olarak al sonra Parse et:
+            string idStr = idElement.GetString();
+            if (!int.TryParse(idStr, out int randevuID))
+                return BadRequest("ID dönüştürülemedi");
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("DELETE FROM Randevular WHERE RandevuID = @id", conn);
+                cmd.Parameters.AddWithValue("@id", randevuID);
+                int sonuc = cmd.ExecuteNonQuery();
+
+                if (sonuc > 0)
+                    return Ok();
+                else
+                    return BadRequest("Silme başarısız");
+            }
+        }
+
+        [HttpGet]
+        public JsonResult GetDoktorUygunluk(int doktorID)
+        {
+            DoktorUygunluk uy = null;
+
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                var cmd = new SqlCommand(@"
+            SELECT TOP 1 * FROM DoktorUygunluk
+            WHERE DoktorID = @d ORDER BY UygunlukID DESC", conn);
+                cmd.Parameters.AddWithValue("@d", doktorID);
+                using (var dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        uy = new DoktorUygunluk
+                        {
+                            BaslangicTarih = Convert.ToDateTime(dr["BaslangicTarih"]),
+                            BitisTarih = Convert.ToDateTime(dr["BitisTarih"]),
+                            BaslangicSaat = (TimeSpan)dr["BaslangicSaat"],
+                            BitisSaat = (TimeSpan)dr["BitisSaat"]
+                        };
+                    }
+                }
+            }
+
+            if (uy == null)
+                return Json(null);
+
+            return Json(new
+            {
+                baslangicTarih = uy.BaslangicTarih.ToString("yyyy-MM-dd"),
+                bitisTarih = uy.BitisTarih.ToString("yyyy-MM-dd"),
+                baslangicSaat = uy.BaslangicSaat.ToString(@"hh\:mm"),
+                bitisSaat = uy.BitisSaat.ToString(@"hh\:mm")
+            });
+        }
+
+        [HttpGet]
+        public JsonResult DoluSaatleriGetir(int doktorID, string tarih)
+        {
+            List<string> doluSaatler = new List<string>();
+
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                var cmd = new SqlCommand(@"
+            SELECT Saat FROM Randevular
+            WHERE DoktorID = @doktorID AND Tarih = @tarih", conn);
+                cmd.Parameters.AddWithValue("@doktorID", doktorID);
+                cmd.Parameters.AddWithValue("@tarih", tarih); // "yyyy-MM-dd"
+
+                var dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    doluSaatler.Add(((TimeSpan)dr["Saat"]).ToString(@"hh\:mm"));
+                }
+            }
+
+            return Json(doluSaatler); // ["10:15", "11:00", ...]
+        }
+
+
+    }
+}

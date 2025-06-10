@@ -1,0 +1,91 @@
+﻿/* Genel sayfa düzeni */
+body {
+    background-color: #1f2029;
+    color: #ffeba7;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Sayfa başlığı */
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: bold;
+    color: #ffeba7;
+}
+/* Kart kutusu */
+.card {
+    background-color: #2b2e38;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    color: #ffeba7;
+    transition: transform 0.3s ease;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    /* Kart başlığı */
+    .card h4 {
+        margin-bottom: 20px;
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #ffd700;
+    }
+
+    /* Form elemanları */
+    .card input[type="text"],
+    .card select {
+        background-color: #1f2029;
+        border: 1px solid #555;
+        border-radius: 8px;
+        padding: 10px 15px;
+        color: #ffeba7;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .card input::placeholder {
+        color: #aaa;
+    }
+
+    /* Ekle butonu */
+    .card .btn-primary {
+        background-color: #ffeba7;
+        border: none;
+        color: #1f2029;
+        font-weight: bold;
+        border-radius: 8px;
+        padding: 10px 20px;
+        transition: background-color 0.3s;
+    }
+
+        .card .btn-primary:hover {
+            background-color: #ffd700;
+            color: #1f2029;
+        }
+.admin-table {
+    color: #ffeba7; /* Açık sarı, gece modu için uyumlu */
+    background-color: #1f2029; /* Koyu arka plan */
+    border-collapse: collapse;
+    width: 100%;
+}
+
+    .admin-table th, .admin-table td {
+        border: 1px solid #444;
+        padding: 12px 15px;
+        text-align: left;
+    }
+
+    .admin-table th {
+        background-color: #2b2e38;
+        color: #ffeba7;
+    }
+
+    .admin-table tr:nth-child(even) {
+        background-color: #2a2a35;
+    }

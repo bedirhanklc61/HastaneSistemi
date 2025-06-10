@@ -1,0 +1,156 @@
+﻿@model List<HastaneSistemi.Models.RandevuModel>
+
+@{
+    Layout = null;
+    var randevular = ViewBag.Randevular as IEnumerable<dynamic>;
+    string adSoyad = ViewBag.AdSoyad as string;
+    var enYakin = Model.OrderBy(r => DateTime.Parse(r.Tarih + " " + r.Saat)).FirstOrDefault();
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doktor Paneli</title>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/doktorpanel.css">
+    <link rel="stylesheet" href="~/css/ayarlar.css">
+    <style>
+        .filter-btn {
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+            .filter-btn.aktif {
+                background-color: #ffeba7;
+                color: #1f2029;
+            }
+
+        #no-appointments {
+            font-size: 20px;
+            text-align: center;
+            margin-top: 50px;
+            display: @(randevular == null || !randevular.Any() ? "block" : "none");
+        }
+    </style>
+</head>
+<body class="@(ViewBag.TemaModu == "light" ? "light-mode" : "")">
+    <div class="top-bar">
+        <div class="user-menu">
+            <button id="user-icon" class="user-btn"><i class="uil uil-user"></i></button>
+            <div id="dropdown-menu" class="dropdown-menu">
+                <a href="/Doktor/Ayarlar?returnUrl=/Doktor/DoktorPanel">⚙️ Ayarlar</a>
+                <a href="/Login/CikisYap">🚪 Oturumu Kapat</a>
+            </div>
+        </div>
+    </div>
+        
+    <div class="container mt-5">
+        <div class="welcome text-center mb-4">
+            <h2>Hoş Geldiniz, @adSoyad 👨‍⚕️</h2>
+            <a asp-action="UygunlukAyarla" asp-controller="Doktor" class="btn btn-info mb-3">📅 Randevu Saat Aralığı Belirle</a>
+            <p style="font-weight:bold; color:limegreen;">@ViewBag.TestMesaj</p>
+            <p>Bugünkü ve haftalık randevularınızı yönetin.</p>
+        </div>
+
+        <div class="text-center mb-4">
+            <input type="text" id="search-input" placeholder="Hasta adı, saat veya tarih ara...">
+        </div>
+
+        <div class="btn-group mb-4 d-flex justify-content-center" role="group">
+            <button type="button" class="btn btn-outline-warning filter-btn aktif" data-filter="gelecek">Yaklaşan Randevu</button>
+            <button type="button" class="btn btn-outline-warning filter-btn" data-filter="tum">Tüm Randevular</button>
+            <button type="button" class="btn btn-outline-warning filter-btn" data-filter="gecmis">Geçmiş Randevular</button>
+        </div>
+
+        <div id="appointments">
+            @* Yaklaşan sadece en yakın *@
+            @if (enYakin != null)
+            {
+                <div class="randevu-card gelecek" data-patient="@enYakin.HastaAdi" data-time="@enYakin.Saat" data-date="@enYakin.Tarih">
+                    <h5>🕒 @enYakin.Saat</h5>
+                    <p>📅 @enYakin.Tarih</p>
+                    <p>👤 Hasta: @enYakin.HastaAdi</p>
+                    <p>🏥 Poliklinik: @enYakin.Bolum</p>
+                    <button class="btn btn-info view-details">Görüntüle</button>
+                    <button class="btn btn-danger cancel" data-id="@enYakin.RandevuID">İptal Et</button>
+                </div>
+            }
+
+            @* Tüm gelecek randevular sıralı *@
+            @foreach (var r in Model.OrderBy(r => DateTime.Parse(r.Tarih + " " + r.Saat)))
+            {
+                <div class="randevu-card tum" data-patient="@r.HastaAdi" data-time="@r.Saat" data-date="@r.Tarih">
+                    <h5>🕒 @r.Saat</h5>
+                    <p>📅 @r.Tarih</p>
+                    <p>👤 Hasta: @r.HastaAdi</p>
+                    <p>🏥 Poliklinik: @r.Bolum</p>
+                    <button class="btn btn-info view-details">Görüntüle</button>
+                    <button class="btn btn-danger cancel" data-id="@r.RandevuID">İptal Et</button>
+                </div>
+            }
+
+            @* Sadece geçmiş ViewBag ile *@
+            @if (ViewBag.GecmisRandevular != null)
+            {
+                foreach (var r in (List<HastaneSistemi.Models.RandevuModel>)ViewBag.GecmisRandevular)
+                {
+                    <div class="randevu-card gecmis" style="opacity: 0.6;">
+                        <h5>🕒 @r.Saat</h5>
+                        <p>📅 @r.Tarih</p>
+                        <p>👤 Hasta: @r.HastaAdi</p>
+                        <p>🏥 Poliklinik: @r.Bolum</p>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/doktorpanel.js"></script>
+    <script>
+        let aktifFiltre = "gelecek";
+
+        function uygulaFiltre() {
+            const arama = document.getElementById('search-input').value.toLowerCase();
+
+            document.querySelectorAll('.randevu-card').forEach(card => {
+                const hasta = card.getAttribute('data-patient')?.toLowerCase() || "";
+                const tarih = card.getAttribute('data-date')?.toLowerCase() || "";
+                const saat = card.getAttribute('data-time')?.toLowerCase() || "";
+
+                const aramaVarMi = arama.length > 0;
+                const aramaEslesiyorMu = hasta.includes(arama) || tarih.includes(arama) || saat.includes(arama);
+
+                if (aramaVarMi) {
+                    // Arama varsa, filtreye bakmadan sadece aramaya göre göster
+                    card.style.display = aramaEslesiyorMu ? "block" : "none";
+                } else {
+                    // Arama yoksa, filtreye göre göster
+                    const filtreUygunMu = aktifFiltre === "tum"
+                        ? card.classList.contains("tum")
+                        : card.classList.contains(aktifFiltre);
+                    card.style.display = filtreUygunMu ? "block" : "none";
+                }
+            });
+        }
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('aktif'));
+                btn.classList.add('aktif');
+                aktifFiltre = btn.dataset.filter;
+                uygulaFiltre(); // filtre değişince tekrar kontrol et
+            });
+        });
+
+        document.getElementById('search-input').addEventListener('input', uygulaFiltre);
+    </script>
+
+
+</body>
+</html>

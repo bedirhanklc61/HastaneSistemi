@@ -1,0 +1,85 @@
+﻿@model HastaneSistemi.Models.HastaBilgileri
+@using Microsoft.AspNetCore.Http
+
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ayarlar</title>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/ayarlar.css">
+</head>
+<body class="@(Context.Session.GetString("TemaModu") == "light" ? "light-mode" : "") @(Context.Session.GetString("YaziBuyuk") == "true" ? "large-text" : "")">
+
+    <div class="container mt-5 settings-box">
+        <div class="geri-don">
+            <a href="@ViewBag.ReturnUrl" class="geri-btn">
+                <i class="uil uil-arrow-left"></i> Geri Dön
+            </a>
+        </div>
+
+        <h2 class="text-center mb-4">Kullanıcı Ayarları</h2>
+
+        <form method="post" action="/Hasta/AyarlarGuncelle">
+            <div class="form-group">
+                <label>Ad Soyad</label>
+                <input type="text" class="form-control" value="@Model.AdSoyad" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>TC Kimlik No</label>
+                <input type="text" class="form-control" value="@Model.TC" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" class="form-control" name="Email" value="@Model.Email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Doğum Tarihi</label>
+                <input type="date" class="form-control" name="DogumTarihi"
+                       value="@(Model.DogumTarihi != DateTime.MinValue ? Model.DogumTarihi.ToString("yyyy-MM-dd") : "")" required>
+
+            </div>
+
+            <div class="form-group">
+                <label>Şifre</label>
+                <div class="password-field">
+                    <input type="password" id="sifre" class="form-control" name="Sifre" value="@Model.Sifre" required>
+                    <i class="uil uil-eye password-toggle" id="sifre-toggle"></i>
+                </div>
+            </div>
+
+            <div class="form-group mt-4">
+                <label>Tema Modu</label><br>
+                <label class="switch">
+                    <input type="checkbox" id="temaSwitch" @(Model.TemaModu == "light" ? "checked" : "")>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <input type="hidden" id="TemaModuInput" name="TemaModu" value="@Model.TemaModu" />
+
+            <div class="form-group mt-4">
+                <label>Yazı Büyüklüğü</label><br>
+                <label class="switch">
+                    <input type="checkbox" id="yaziBuyukSwitch" name="YaziBuyuk" value="true" @(Context.Session.GetString("YaziBuyuk") == "true" ? "checked" : "")>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+
+
+            <button type="submit" class="btn btn-primary mt-4">Kaydet</button>
+        </form>
+    </div>
+
+    <script src="~/js/ayarlar.js"></script>
+</body>
+</html>

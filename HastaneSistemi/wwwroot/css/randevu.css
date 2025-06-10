@@ -1,0 +1,281 @@
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #1f2029;
+    color: #ffeba7;
+    overflow-x: hidden;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+    body.light-mode {
+        background-color: #f5f5f5;
+        color: #1f2029;
+    }
+
+h2, label, .form-control {
+    color: #ffeba7;
+}
+
+body.light-mode h2,
+body.light-mode label,
+body.light-mode .form-control {
+    color: #1f2029 !important;
+}
+
+.top-bar {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 9999;
+}
+
+.user-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 28px;
+    color: #ffd700;
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 55px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #2b2e38;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 10px 0;
+    min-width: 160px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    text-align: left;
+    z-index: 2000;
+}
+
+    .dropdown-menu a {
+        display: block;
+        padding: 10px 20px;
+        color: #ffeba7;
+        text-decoration: none;
+    }
+
+        .dropdown-menu a:hover {
+            background-color: #444;
+        }
+
+body.light-mode .dropdown-menu {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+}
+
+    body.light-mode .dropdown-menu a {
+        color: #1f2029;
+    }
+
+        body.light-mode .dropdown-menu a:hover {
+            background-color: #eee;
+        }
+
+.poliklinik-card {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 25px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+    transition: all 0.4s ease-in-out;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+    .poliklinik-card:hover {
+        box-shadow: 0 0 15px rgba(255, 235, 167, 0.6);
+    }
+
+    .poliklinik-card i {
+        font-size: 48px;
+        color: #ffeba7;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    .poliklinik-card h5 {
+        color: #ffeba7;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .poliklinik-card form {
+        margin-top: 20px;
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: opacity 0.4s, max-height 0.4s;
+    }
+
+    .poliklinik-card.show-form form {
+        opacity: 1;
+        max-height: 500px;
+    }
+
+    .poliklinik-card.moving {
+        transition: transform 0.6s ease;
+        z-index: 1051 !important;
+    }
+
+    .poliklinik-card.expanded {
+        transform: translate(-50%, -50%) scale(1.05);
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        width: 90%;
+        max-width: 600px;
+        z-index: 1052;
+    }
+
+body.light-mode .poliklinik-card {
+    background: #ffffff;
+    color: #1f2029;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+    body.light-mode .poliklinik-card i,
+    body.light-mode .poliklinik-card h5 {
+        color: #007bff;
+    }
+
+.geri-btn {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: none;
+    border: none;
+    color: #ffeba7;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 2001;
+    display: none;
+}
+
+body.light-mode .geri-btn {
+    color: #007bff;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.9);
+    color: #ffeba7;
+    padding: 20px 30px;
+    border-radius: 12px;
+    font-size: 18px;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+    .popup.show {
+        opacity: 1;
+    }
+
+body.light-mode .popup {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #1f2029;
+}
+
+/* Arama Kutusu */
+#aramaKutusu {
+    max-width: 400px;
+    margin: 0 auto;
+    border-radius: 20px;
+    padding: 10px 20px;
+    border: 1px solid #ffeba7;
+    background: transparent;
+    color: #ffeba7;
+}
+
+body.light-mode #aramaKutusu {
+    border: 1px solid #007bff;
+    background: #fff;
+    color: #1f2029;
+}
+.panel-geri-btn {
+    position: fixed;
+    top: 25px;
+    left: 25px;
+    font-size: 28px;
+    background: none;
+    color: #ffeba7;
+    border: none;
+    z-index: 9999;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+    .panel-geri-btn:hover {
+        color: #ffd700;
+    }
+
+body.light-mode .panel-geri-btn {
+    color: #1f2029;
+}
+
+    body.light-mode .panel-geri-btn:hover {
+        color: #007bff;
+    }
+
+
+body.large-text {
+    font-size: 1.5rem;
+}
+
+    body.large-text input,
+    body.large-text select,
+    body.large-text button,
+    body.large-text h2,
+    body.large-text label {
+        font-size: 1.3rem;
+    }
+
+    body.large-text .panel-geri-btn,
+    body.large-text .uil {
+        font-size: 2rem;
+    }
+    body.large-text .randevu-box .card-title,
+    body.large-text .randevu-box .card-text {
+        font-size: 1.4rem;
+    }
+    body.large-text .randevu-box {
+        padding: 1.5rem;
+    }
+    body.large-text .poliklinik-card {
+        font-size: 1.4rem;
+    }
+
+        body.large-text .poliklinik-card h5 {
+            font-size: 1.6rem;
+            font-weight: bold;
+        }
+
+        body.large-text .poliklinik-card i {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+        }
+    body.large-text h2 {
+        font-size: 2rem;
+    }
+
+
+
+

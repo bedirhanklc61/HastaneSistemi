@@ -1,0 +1,105 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>KTÜ FARABİ Hastanesi - Randevu Sistemi</title>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/giris.css">
+    
+
+</head>
+
+<body class="parallax-bg">
+    
+
+
+    <div class="container">
+        <div class="box">
+            <span></span>
+            <div class="contentt">
+                <h2>KTÜ FARABİ Hastanesi</h2>
+                <p>Online Randevu Sistemine Hoş Geldiniz</p>
+            </div>
+        </div>
+
+        <div class="col-md-6 text-center align-self-center py-5">
+            <div class="section pb-5 pt-5 pt-sm-2 text-center">
+                <h6 class="mb-0 pb-3"><span>Giriş Yap </span><span>Kayıt Ol</span></h6>
+                <input class="checkbox" type="checkbox" id="reg-log" name="reg-log" />
+                <label for="reg-log"></label>
+
+                <div class="card-3d-wrap mx-auto">
+                    <div class="card-3d-wrapper">
+
+                        <!-- Giriş Paneli -->
+                        <div class="card-front">
+                            <div class="center-wrap">
+                                <div class="section text-center">
+                                    <h4 class="mb-4 pb-3">Giriş Yap</h4>
+
+                                    <form method="post" action="/Login/GirisYap">
+                                        <div class="form-group">
+                                            <input type="text" class="form-style" id="emailOrTc" name="emailOrTc" placeholder="Email veya TC Kimlik Numarası" required>
+                                            <i class="input-icon uil uil-user"></i> 
+                                        </div>
+                                        <div class="form-group mt-2">
+                                            <input type="password" class="form-style" id="sifre" name="sifre" placeholder="Şifre" required>
+                                            <i class="input-icon uil uil-lock-alt"></i>
+                                        </div>
+                                        <button type="submit" class="btn mt-4">Giriş</button>
+                                    </form>
+
+                                    <p class="mb-0 mt-4 text-center"><a href="#" class="link">Şifrenizi mi unuttunuz?</a></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kayıt Paneli -->
+                        <div class="card-back">
+                            <div class="center-wrap">
+                                <div class="section text-center">
+                                    <form method="post" action="/Login/KayitOl">
+                                        <h4 class="mb-3 pb-1">Kayıt Ol</h4>
+                                        <div class="form-group">
+                                            <input type="text" class="form-style" placeholder="Ad Soyad" name="adsoyad" required>
+                                            <i class="input-icon uil uil-user"></i>
+                                        </div>                                     
+                                        <div class="form-group mt-2">
+                                            <input type="date" class="form-style" placeholder="Doğum Tarihi" name="dogumTarihi" required>
+                                            <i class="input-icon uil uil-calendar-alt"></i>
+                                        </div>
+                                        <div class="form-group mt-2">
+                                            <input type="email" class="form-style" placeholder="Email" name="email" required>
+                                            <i class="input-icon uil uil-at"></i>
+                                        </div>
+                                        <div class="form-group mt-2">
+                                            <input type="text" class="form-style" placeholder="TC Kimlik Numarası" name="tc" pattern="\d{11}" maxlength="11" required title="11 haneli TC Kimlik numarası giriniz">
+                                            <i class="input-icon uil uil-credit-card"></i>
+                                        </div>
+                                        <div class="form-group mt-2">
+                                            <input type="password" class="form-style" placeholder="Şifre" name="sifre" required>
+                                            <i class="input-icon uil uil-lock-alt"></i>
+                                        </div>
+                                        <button type="submit" class="btn mt-3">Kayıt Ol</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="~/js/giris.js"></script>
+    
+
+</body>
+</html>

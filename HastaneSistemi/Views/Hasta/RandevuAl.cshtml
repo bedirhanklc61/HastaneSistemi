@@ -1,0 +1,58 @@
+﻿@{
+    Layout = null;
+    @using Microsoft.AspNetCore.Http
+    var tema = Context.Session.GetString("TemaModu");
+    bool yaziBuyuk = Context.Session.GetString("YaziBuyuk") == "True";
+
+    // class birleştirme işlemi
+    var bodyClassList = new List<string>();
+    if (tema == "light") { bodyClassList.Add("light-mode"); }
+    if (yaziBuyuk) { bodyClassList.Add("large-text"); }
+
+    string bodyClass = string.Join(" ", bodyClassList);
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poliklinik Seçimi</title>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/randevu.css">
+</head>
+<body class="@bodyClass">
+
+    <a href="/Hasta/HastaPanel" class="panel-geri-btn">
+        <i class="uil uil-arrow-left"></i>
+    </a>
+
+    <input type="hidden" id="TemaModuInput" value="@Context.Session.GetString("TemaModu")" />
+
+
+
+    <div class="top-bar">
+        <button id="user-icon" class="user-btn">
+            <i class="uil uil-user"></i>
+        </button>
+        <div id="dropdown-menu" class="dropdown-menu">
+            <a href="/Hasta/Ayarlar?returnUrl=/Hasta/RandevuAl">⚙️ Ayarlar</a>
+            <a href="/Login/CikisYap">🚪 Oturumu Kapat</a>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Poliklinik Seçiniz</h2>
+
+        <div class="text-center mb-4">
+            <input type="text" id="aramaKutusu" class="form-control" placeholder="Bölüm Arayınız..." style="max-width: 400px; margin: 0 auto; border-radius: 20px; padding: 10px 20px;">
+        </div>
+
+        <div class="row" id="poliklinik-listesi"></div>
+    </div>
+
+    <div id="popup" class="popup">✅ Randevu başarıyla oluşturuldu!</div>
+
+    <script src="~/js/randevu.js"></script>
+</body>
+</html>

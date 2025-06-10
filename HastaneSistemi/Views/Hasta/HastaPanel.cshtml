@@ -1,0 +1,67 @@
+﻿@{
+    Layout = null;
+    @using Microsoft.AspNetCore.Http
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kullanıcı Paneli</title>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/panel.css">
+</head>
+<body class="@(Context.Session.GetString("TemaModu") == "light" ? "light-mode" : "") @(Context.Session.GetString("YaziBuyuk") == "True" ? "large-text" : "")">
+
+
+
+    <input type="hidden" id="TemaModuInput" value="@Context.Session.GetString("TemaModu")" />
+
+    <div class="top-bar">
+        <div class="user-menu">
+            <button id="user-icon" class="user-btn">
+                <i class="uil uil-user"></i>
+            </button>
+            <div id="dropdown-menu" class="dropdown-menu">
+                <a href="/Hasta/Ayarlar?returnUrl=/Hasta/HastaPanel">⚙️ Ayarlar</a>
+                <a href="/Login/CikisYap">🚪 Oturumu Kapat</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="welcome text-center mb-4">
+            <h2>Hoş Geldiniz, @Context.Session.GetString("AdSoyad") 👋</h2>
+            <p>KTÜ Farabi Hastanesi Randevu Sistemine giriş yaptınız.</p>
+        </div>
+
+        <div class="text-center mb-4">
+            <a href="/Hasta/RandevuAl" class="btn btn-primary px-4 py-2">Yeni Randevu Al</a>
+        </div>
+
+        <!-- Filtre butonları -->
+        <div class="text-center mb-4">
+            <div class="btn-group" role="group">
+                <button id="btn-yaklasan" class="btn btn-outline-primary">Yaklaşan Randevular</button>
+                <button id="btn-tum" class="btn btn-outline-primary">Tüm Randevularım</button>
+                <button id="btn-gecmis" class="btn btn-outline-primary">Geçmiş Randevular</button>
+            </div>
+        </div>
+
+
+        <!-- Dinamik randevu sonucu alanı -->
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div id="randevu-listesi">
+                    <!-- JS ile randevular buraya gelecek -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="~/js/panel.js"></script>
+
+</body>
+</html>

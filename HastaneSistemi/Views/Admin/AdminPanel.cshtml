@@ -1,0 +1,126 @@
+﻿@{
+    Layout = null;
+    @using Microsoft.AspNetCore.Http
+    var tema = Context.Session.GetString("TemaModu");
+    string bodyClass = (tema == "light" ? "light-mode" : "");
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Paneli</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/admin.css" rel="stylesheet" />
+</head>
+<body class="@bodyClass">
+
+    <div class="container">
+        <div class="admin-header text-center mt-5">
+            <h1>👑 Admin Paneli</h1>
+            <p>Hoşgeldiniz Sayın Admin!</p>
+        </div>
+
+        <div class="admin-buttons text-center mt-4">
+            <button onclick="showSection('doktor')" class="btn btn-warning m-2">👨‍⚕️ Doktor Ekle</button>
+            <button onclick="showSection('hasta')" class="btn btn-warning m-2">🧑‍🦰 Hasta Ekle</button>
+            <button onclick="showSection('randevu')" class="btn btn-warning m-2">📅 Randevuları Görüntüle</button>
+        </div>
+
+        <!-- Doktor Ekleme -->
+        <div id="doktor" class="section mt-4" style="display:none;">
+            <h4>👨‍⚕️ Yeni Doktor Ekle</h4>
+            <form method="post" action="/Admin/DoktorEkle">
+                <div class="form-group">
+                    <label>Ad Soyad</label>
+                    <input name="AdSoyad" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Bölüm</label>
+                    <select name="Bolum" class="form-control" required>
+                        <option value="">Seçiniz</option>
+                        @foreach (var bolum in ViewBag.Poliklinikler as List<Poliklinik>)
+                        {
+                            <option value="@bolum.PoliklinikID">@bolum.Ad</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input name="Email" type="email" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Şifre</label>
+                    <input name="Sifre" type="password" class="form-control" required />
+                </div>
+                <button type="submit" class="btn btn-success mt-3">Kaydet</button>
+            </form>
+        </div>
+
+        <!-- Hasta Ekleme -->
+        <div id="hasta" class="section mt-4" style="display:none;">
+            <h4>🧑‍🦰 Yeni Hasta Ekle</h4>
+            <form method="post" action="/Admin/HastaEkle">
+                <div class="form-group">
+                    <label>Ad Soyad</label>
+                    <input name="AdSoyad" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>TC Kimlik No</label>
+                    <input name="TcKimlikNo" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input name="Email" type="email" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Doğum Tarihi</label>
+                    <input name="DogumTarihi" type="date" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Şifre</label>
+                    <input name="Sifre" type="password" class="form-control" required />
+                </div>
+                <button type="submit" class="btn btn-success mt-3">Kaydet</button>
+            </form>
+        </div>
+
+        <!-- Randevu Listesi -->
+        <div id="randevu" class="section mt-4" style="display:none;">
+            <h4>📅 Tüm Randevular</h4>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Hasta</th>
+                        <th>Doktor</th>
+                        <th>Bölüm</th>
+                        <th>Tarih</th>
+                        <th>Saat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.Randevular as List<RandevuViewModel>)
+                    {
+                        <tr>
+                            <td>@item.HastaAd</td>
+                            <td>@item.DoktorAd</td>
+                            <td>@item.Bolum</td>
+                            <td>@item.Tarih.ToString("dd.MM.yyyy")</td>
+                            <td>@item.Saat</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
+    </script>
+</body>
+</html>
