@@ -16,6 +16,12 @@
     <link href="~/css/admin.css" rel="stylesheet" />
 </head>
 <body class="@bodyClass">
+    @if (TempData["Basari"] != null)
+    {
+        <div id="basariKutusu" class="alert alert-success text-center">
+            @TempData["Basari"]
+        </div>
+    }
 
     <div class="container">
         <div class="admin-header text-center mt-5">
@@ -24,9 +30,13 @@
         </div>
 
         <div class="admin-buttons text-center mt-4">
-            <button onclick="showSection('doktor')" class="btn btn-warning m-2">👨‍⚕️ Doktor Ekle</button>
-            <button onclick="showSection('hasta')" class="btn btn-warning m-2">🧑‍🦰 Hasta Ekle</button>
-            <button onclick="showSection('randevu')" class="btn btn-warning m-2">📅 Randevuları Görüntüle</button>
+            <button onclick="toggleSection('doktor')" class="btn btn-warning m-2">👨‍⚕️ Doktor Ekle</button>
+            <button onclick="toggleSection('doktorListe')" class="btn btn-warning m-2">👨‍⚕️ Doktorları Görüntüle</button>
+            <button onclick="toggleSection('randevu')" class="btn btn-warning m-2">📅 Randevuları Görüntüle</button>
+            <button onclick="toggleSection('poliklinik')" class="btn btn-warning m-2">🏥 Poliklinik Ekle</button>
+            <button onclick="toggleSection('poliklinikListe')" class="btn btn-warning m-2">🗂 Poliklinikleri Görüntüle</button>
+
+
         </div>
 
         <!-- Doktor Ekleme -->
@@ -59,61 +69,140 @@
             </form>
         </div>
 
-        <!-- Hasta Ekleme -->
-        <div id="hasta" class="section mt-4" style="display:none;">
-            <h4>🧑‍🦰 Yeni Hasta Ekle</h4>
-            <form method="post" action="/Admin/HastaEkle">
-                <div class="form-group">
-                    <label>Ad Soyad</label>
-                    <input name="AdSoyad" class="form-control" required />
-                </div>
-                <div class="form-group">
-                    <label>TC Kimlik No</label>
-                    <input name="TcKimlikNo" class="form-control" required />
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input name="Email" type="email" class="form-control" required />
-                </div>
-                <div class="form-group">
-                    <label>Doğum Tarihi</label>
-                    <input name="DogumTarihi" type="date" class="form-control" required />
-                </div>
-                <div class="form-group">
-                    <label>Şifre</label>
-                    <input name="Sifre" type="password" class="form-control" required />
-                </div>
-                <button type="submit" class="btn btn-success mt-3">Kaydet</button>
-            </form>
-        </div>
-
-        <!-- Randevu Listesi -->
-        <div id="randevu" class="section mt-4" style="display:none;">
-            <h4>📅 Tüm Randevular</h4>
+        <div id="doktorListe" class="section mt-5" style="display:none;">
+            <h4>👨‍⚕️ Tüm Doktorlar</h4>
             <table class="admin-table">
                 <thead>
                     <tr>
-                        <th>Hasta</th>
-                        <th>Doktor</th>
+                        <th>#</th>
+                        <th>Ad Soyad</th>
+                        <th>Email</th>
                         <th>Bölüm</th>
-                        <th>Tarih</th>
-                        <th>Saat</th>
+                        <th>İşlem</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in ViewBag.Randevular as List<RandevuViewModel>)
+                    @foreach (var doktor in ViewBag.Doktorlar as List<DoktorBilgileri>)
                     {
                         <tr>
-                            <td>@item.HastaAd</td>
-                            <td>@item.DoktorAd</td>
-                            <td>@item.Bolum</td>
-                            <td>@item.Tarih.ToString("dd.MM.yyyy")</td>
-                            <td>@item.Saat</td>
+                            <td>@doktor.DoktorID</td>
+                            <td>@doktor.AdSoyad</td>
+                            <td>@doktor.Email</td>
+                            <td>@doktor.Bolum</td>
+                            <td>
+                                <form method="post" action="/Admin/DoktorSil" onsubmit="return confirm('Silmek istediğine emin misiniz?')">
+                                    <input type="hidden" name="id" value="@doktor.DoktorID" />
+                                    <button type="submit" class="btn btn-sm btn-danger">Sil</button>
+                                </form>
+                                <button class="btn btn-sm btn-outline-primary uygunluk-ac mt-1" data-id="@doktor.DoktorID">
+                                    📅 Müsaitlik Ekle
+                                </button>
+                            </td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
+        <!-- Modal -->
+        <div id="uygunlukModal" style="display:none;" class="modal">
+            <form method="post" action="/Admin/UygunlukAyarla" class="modal-content">
+                <h5 class="mb-3">Müsaitlik Aralığı Belirle</h5>
+                <input type="hidden" name="DoktorID" id="modalDoktorID" />
+                <div class="form-group">
+                    <label>Başlangıç Tarihi</label>
+                    <input type="date" name="BaslangicTarih" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Bitiş Tarihi</label>
+                    <input type="date" name="BitisTarih" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Başlangıç Saati</label>
+                    <input type="time" name="BaslangicSaat" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Bitiş Saati</label>
+                    <input type="time" name="BitisSaat" class="form-control" required />
+                </div>
+                <div class="mt-3 text-end">
+                    <button type="submit" class="btn btn-success">Kaydet</button>
+                    <button type="button" onclick="kapatModal()" class="btn btn-secondary">İptal</button>
+                </div>
+            </form>
+        </div>
+
+
+
+        <!-- Randevu Listesi -->
+        <div id="randevu" class="section mt-4" style="display:none;">
+            <div class="text-center mb-3">
+                <button onclick="goster('gecmis')" class="btn btn-danger">📂 Geçmiş Randevular</button>
+                <button onclick="goster('aktif')" class="btn btn-success">🟢 Aktif Randevular</button>
+            </div>
+
+            <div id="gecmisRandevuDiv" style="display:none;">
+                <h5>📂 Geçmiş Randevular</h5>
+                <table class="admin-table">
+                    <thead>
+                        <tr><th>Hasta</th><th>Doktor</th><th>Bölüm</th><th>Tarih</th><th>Saat</th></tr>
+                    </thead>
+                    <tbody id="gecmisRandevular"></tbody>
+                </table>
+            </div>
+
+            <div id="aktifRandevuDiv" style="display:none;">
+                <h5>🟢 Aktif Randevular</h5>
+                <table class="admin-table">
+                    <thead>
+                        <tr><th>Hasta</th><th>Doktor</th><th>Bölüm</th><th>Tarih</th><th>Saat</th></tr>
+                    </thead>
+                    <tbody id="aktifRandevular"></tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <!-- Poliklinik Ekleme -->
+        <div id="poliklinik" class="section mt-4" style="display:none;">
+            <h4>🏥 Yeni Poliklinik Ekle</h4>
+            <form method="post" action="/Admin/PoliklinikEkle">
+                <div class="form-group">
+                    <label>Poliklinik Adı</label>
+                    <input name="Ad" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Ikon Adı (örnek: uil-heart, uil-eye...)</label>
+                    <input name="Ikon" class="form-control" required />
+                </div>
+                <button type="submit" class="btn btn-success mt-3">Ekle</button>
+            </form>
+        </div>
+        <!-- Poliklinik Listesi ve Silme -->
+        <div class="section mt-5" id="poliklinikListe" style="display:none;">
+            <h4>📋 Tüm Poliklinikler</h4>
+            <table class="admin-table">
+                <thead>
+                    <tr><th>#</th><th>Ad</th><th>İkon</th><th>İşlem</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.Poliklinikler as List<Poliklinik>)
+                    {
+                        <tr>
+                            <td>@item.PoliklinikID</td>
+                            <td>@item.Ad</td>
+                            <td><i class="uil @item.Ikon"></i> @item.Ikon</td>
+                            <td>
+                                <form method="post" action="/Admin/PoliklinikSil" onsubmit="return confirm('Silmek istediğine emin misin?')">
+                                    <input type="hidden" name="id" value="@item.PoliklinikID" />
+                                    <button type="submit" class="btn btn-sm btn-danger">Sil</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
     <script>
@@ -122,5 +211,74 @@
             document.getElementById(id).style.display = 'block';
         }
     </script>
+    <script>
+        function goster(tip) {
+            fetch("/Admin/RandevulariAyir")
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("gecmisRandevuDiv").style.display = "none";
+                    document.getElementById("aktifRandevuDiv").style.display = "none";
+
+                    const liste = (tip === "gecmis") ? data.gecmis : data.aktif;
+                    const hedefID = (tip === "gecmis") ? "gecmisRandevular" : "aktifRandevular";
+                    const hedef = document.getElementById(hedefID);
+                    hedef.innerHTML = "";
+
+                    liste.forEach(r => {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td>${r.hastaAd}</td>
+                            <td>${r.doktorAd}</td>
+                            <td>${r.bolum}</td>
+                            <td>${new Date(r.tarih).toLocaleDateString()}</td>
+                            <td>${r.saat}</td>`;
+                        hedef.appendChild(tr);
+                    });
+
+                    document.getElementById(tip + "RandevuDiv").style.display = "block";
+                });
+        }
+    </script>
+    <script>
+        function toggleSection(id) {
+            const section = document.getElementById(id);
+            const visible = section.style.display === "block";
+
+            // Tüm diğer section'ları gizle
+            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+
+            // Eğer zaten görünürse kapat, değilse göster
+            section.style.display = visible ? 'none' : 'block';
+        }
+    </script>
+    <script>
+        document.querySelectorAll('.uygunluk-ac').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const doktorID = btn.dataset.id;
+                document.getElementById('modalDoktorID').value = doktorID;
+                document.getElementById('uygunlukModal').style.display = 'block';
+            });
+        });
+
+        function kapatModal() {
+            document.getElementById('uygunlukModal').style.display = 'none';
+        }
+    </script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const kutu = document.getElementById('basariKutusu');
+            if (kutu) {
+                setTimeout(() => {
+                    kutu.style.transition = "opacity 0.8s";
+                    kutu.style.opacity = 0;
+                    setTimeout(() => kutu.remove(), 800);
+                }, 3000);
+            }
+        });
+    </script>
+
+
+
+
 </body>
 </html>

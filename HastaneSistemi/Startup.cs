@@ -1,13 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using HastaneSistemi.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace HastaneSistemi
 {
@@ -25,7 +27,9 @@ namespace HastaneSistemi
         {
             services.AddControllersWithViews();
             services.AddSession();
-            //services.AddAuthentication
+            services.AddDbContext<HastaneDbContext>(options =>
+    options.UseSqlServer("Data Source=127.0.0.1,1433;Initial Catalog=HastaneDB;User ID=sa;Password=12345;TrustServerCertificate=True;"));
+
 
         }
 

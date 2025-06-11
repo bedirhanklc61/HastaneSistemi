@@ -1,10 +1,15 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace HastaneSistemi.Models
 {
     public class RandevuBilgisi
     {
+
+        [Key]
+        public int RandevuID { get; set; }
+
 
         public string TcKimlikNo { get; set; }
         public string Bolum { get; set; }

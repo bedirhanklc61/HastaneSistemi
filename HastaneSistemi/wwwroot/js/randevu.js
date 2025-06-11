@@ -1,59 +1,21 @@
 // Global doktor listesi
 let doktorVerileri = [];
 
-// Poliklinik listesi
-const poliklinikVerileri = [
-    { ad: "Acil Tıp", ikon: "uil-ambulance" },
-    { ad: "Aile Hekimliği", ikon: "uil-user-md" },
-    { ad: "Anesteziyoloji ve Reanimasyon", ikon: "uil-clinic-medical" },
-    { ad: "Beyin ve Sinir Cerrahisi", ikon: "uil-brain" },
-    { ad: "Cildiye", ikon: "uil-swatchbook" },
-    { ad: "Endokrinoloji ve Metabolizma Hastalıkları", ikon: "uil-flask" },
-    { ad: "Enfeksiyon Hastalıkları", ikon: "uil-virus-slash" },
-    { ad: "Fiziksel Tıp ve Rehabilitasyon", ikon: "uil-wheelchair" },
-    { ad: "Gastroenteroloji", ikon: "uil-stethoscope" },
-    { ad: "Genel Cerrahi", ikon: "uil-hospital" },
-    { ad: "Genel Dahiliye", ikon: "uil-medical-drip" },
-    { ad: "Girişimsel Radyoloji", ikon: "uil-flask" },
-    { ad: "Göz Hastalıkları", ikon: "uil-eye" },
-    { ad: "Göğüs Cerrahisi", ikon: "uil-stethoscope" },
-    { ad: "Göğüs Hastalıkları", ikon: "uil-stethoscope" },
-    { ad: "Hematoloji", ikon: "uil-syringe" },
-    { ad: "Kadin Hastalıkları", ikon: "uil-user" },
-    { ad: "Kalp ve Damar Cerrahisi", ikon: "uil-heart" },
-    { ad: "Kardiyoloji", ikon: "uil-heartbeat" },
-    { ad: "Kulak Burun Boğaz", ikon: "uil-headphones" },
-    { ad: "Nefroloji", ikon: "uil-kid" },
-    { ad: "Nöroloji", ikon: "uil-brain" },
-    { ad: "Nükleer Tıp", ikon: "uil-atom" },
-    { ad: "Ortopedi", ikon: "uil-wheelchair" },
-    { ad: "Plastik, Rekonstrüktif ve Estetik Cerrahi", ikon: "uil-user-check" },
-    { ad: "Radyasyon Onkolojisi", ikon: "uil-atom" },
-    { ad: "Radyoloji", ikon: "uil-dna" },
-    { ad: "Romatoloji", ikon: "uil-wheelchair" },
-    { ad: "Ruh Sağlığı ve Hastalıkları", ikon: "uil-user" },
-    { ad: "Tibbi Biyokimya", ikon: "uil-flask" },
-    { ad: "Tibbi Genetik", ikon: "uil-dna" },
-    { ad: "Tibbi Mikrobiyoloji", ikon: "uil-virus-slash" },
-    { ad: "Tibbi Onkoloji", ikon: "uil-dna" },
-    { ad: "Tibbi Patoloji", ikon: "uil-notes" },
-    { ad: "Yeni Doğan", ikon: "uil-baby-carriage" },
-    { ad: "Çocuk Acil", ikon: "uil-ambulance" },
-    { ad: "Çocuk Cerrahisi", ikon: "uil-syringe" },
-    { ad: "Çocuk Endokrinolojisi", ikon: "uil-baby-carriage" },
-    { ad: "Çocuk Enfeksiyon ve Hastalıkları", ikon: "uil-virus-slash" },
-    { ad: "Çocuk Gastroenterolojisi", ikon: "uil-stethoscope-alt" },
-    { ad: "Çocuk Hematolojisi ve Onkolojisi", ikon: "uil-dna" },
-    { ad: "Çocuk Kardiyolojisi", ikon: "uil-heart" },
-    { ad: "Çocuk Nefrolojisi", ikon: "uil-kid" },
-    { ad: "Çocuk Nörolojisi", ikon: "uil-brain" },
-    { ad: "Çocuk Romatolojisi", ikon: "uil-wheelchair-alt" },
-    { ad: "Çocuk Sağlığı ve Hastalıkları", ikon: "uil-kid" },
-    { ad: "Çocuk ve Ergen Ruh Sağlığı", ikon: "uil-user" },
-    { ad: "Çocuk İmmünolojisi ve Alerji Hastalıkları", ikon: "uil-syringe" },
-    { ad: "Üroloji", ikon: "uil-medkit" },
-    { ad: "İmmünoloji ve Alerji Hastalıkları", ikon: "uil-syringe" }
-];
+// Sayfa yüklendiğinde poliklinik ve doktor verilerini getir
+window.addEventListener("DOMContentLoaded", () => {
+    Promise.all([
+        fetch('/Hasta/PoliklinikleriGetir').then(res => res.json()),
+        fetch('/Hasta/DoktorlariGetir').then(res => res.json())
+    ])
+        .then(([poliklinikVerileri, doktorlar]) => {
+            doktorVerileri = doktorlar;
+            kartlariOlustur(poliklinikVerileri); // ✅ burada parametre geliyor
+        })
+        .catch(err => {
+            console.error("Veri getirme hatası:", err);
+        });
+});
+
 
 document.addEventListener('DOMContentLoaded', function () {
     const userIcon = document.getElementById('user-icon');
@@ -101,16 +63,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 // Sayfa yüklendiğinde doktorları al ve kartları oluştur
+// Sayfa yüklendiğinde hem doktor hem poliklinikleri al
 window.addEventListener("DOMContentLoaded", () => {
-    fetch('/Hasta/DoktorlariGetir')
-        .then(res => res.json())
-        .then(data => {
-            doktorVerileri = data;
-            kartlariOlustur();
+    Promise.all([
+        fetch('/Hasta/PoliklinikleriGetir').then(res => res.json()),
+        fetch('/Hasta/DoktorlariGetir').then(res => res.json())
+    ])
+        .then(([poliklinikVerileri, doktorlar]) => {
+            doktorVerileri = doktorlar;
+            kartlariOlustur(poliklinikVerileri); // 💡 artık parametre alıyor
+        })
+        .catch(err => {
+            console.error("Veri getirme hatası:", err);
         });
 });
 
-function kartlariOlustur() {
+
+function kartlariOlustur(poliklinikVerileri) {
     const poliklinikListesi = document.getElementById("poliklinik-listesi");
     const popup = document.getElementById("popup");
 

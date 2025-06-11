@@ -1,12 +1,16 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace HastaneSistemi.Models
 {
     public class HastaBilgileri
     {
         public string AdSoyad { get; set; }
+
+        [Key]
         public string TC { get; set; }
+
         public string Email { get; set; }
         public DateTime DogumTarihi { get; set; }
         public string Sifre { get; set; }

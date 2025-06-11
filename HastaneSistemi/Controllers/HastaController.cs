@@ -6,6 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Reflection;
+using System.Linq;
+
+
+
 
 public class Doktor
 {
@@ -19,6 +23,15 @@ namespace HastaneSistemi.Controllers
     public class HastaController : Controller
     {
         private readonly string _connectionString = "Data Source=127.0.0.1,1433;Initial Catalog=HastaneDB;User ID=sa;Password=12345;TrustServerCertificate=True;";
+        private readonly HastaneDbContext _context;
+
+        
+
+        public HastaController(HastaneDbContext context)
+        {
+            _context = context;
+        }
+
 
         public IActionResult HastaPanel()
         {
@@ -309,10 +322,20 @@ namespace HastaneSistemi.Controllers
             if (!data.TryGetProperty("randevuID", out JsonElement idElement))
                 return BadRequest("Geçersiz veri");
 
-            // HATA BURADAYDI! Element string geliyorsa string olarak al sonra Parse et:
-            string idStr = idElement.GetString();
-            if (!int.TryParse(idStr, out int randevuID))
+            int randevuID;
+            if (idElement.ValueKind == JsonValueKind.Number)
+            {
+                randevuID = idElement.GetInt32();
+            }
+            else if (idElement.ValueKind == JsonValueKind.String &&
+                     int.TryParse(idElement.GetString(), out int parsed))
+            {
+                randevuID = parsed;
+            }
+            else
+            {
                 return BadRequest("ID dönüştürülemedi");
+            }
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -389,6 +412,17 @@ namespace HastaneSistemi.Controllers
             }
 
             return Json(doluSaatler); // ["10:15", "11:00", ...]
+        }
+
+        public IActionResult PoliklinikleriGetir()
+        {
+            var poliklinikler = _context.Poliklinikler
+                .Select(p => new {
+                    ad = p.Ad,
+                    ikon = p.Ikon
+                }).ToList();
+
+            return Json(poliklinikler);
         }
 
 
