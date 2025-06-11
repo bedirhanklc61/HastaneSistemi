@@ -303,7 +303,7 @@ function kartlariOlustur(poliklinikVerileri) {
                     }
                 })
                 .catch(err => {
-                    console.error("Hata:", err);
+                    console.error("Hata:", err.message);
                 });
         });
 

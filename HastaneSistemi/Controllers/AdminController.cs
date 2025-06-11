@@ -100,7 +100,7 @@ namespace HastaneSistemi.Controllers
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT AdSoyad FROM Hastalar WHERE TcKimlikNo = @tc", conn);
+                SqlCommand cmd = new SqlCommand("SELECT AdSoyad FROM Hastalar WHERE TC = @tc", conn);
                 cmd.Parameters.AddWithValue("@tc", tcKimlik);
                 return cmd.ExecuteScalar()?.ToString() ?? "Bilinmiyor";
             }

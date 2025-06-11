@@ -39,7 +39,7 @@ namespace HastaneSistemi.Controllers
                 var cmd = new SqlCommand(@"
             SELECT r.RandevuID, r.Tarih, r.Saat, r.Bolum, h.AdSoyad AS HastaAdi
             FROM Randevular r
-            INNER JOIN Hastalar h ON r.TcKimlikNo = h.TcKimlikNo
+            INNER JOIN Hastalar h ON r.TcKimlikNo = h.TC
             WHERE r.DoktorID = @doktorID", conn);
                 cmd.Parameters.AddWithValue("@doktorID", doktorID);
 

@@ -45,7 +45,7 @@ namespace HastaneSistemi.Controllers
                 SqlDataReader drAdmin = cmdAdmin.ExecuteReader();
                 if (drAdmin.Read())
                 {
-                    HttpContext.Session.SetString("KullaniciAdi", drAdmin["KullaniciAdi"].ToString());
+                    HttpContext.Session.SetString("Email", drAdmin["Email"].ToString());
                     HttpContext.Session.SetString("KullaniciTipi", "Admin");
                     drAdmin.Close();
                     return RedirectToAction("AdminPanel", "Admin");
@@ -90,7 +90,7 @@ namespace HastaneSistemi.Controllers
                 {
                     HttpContext.Session.SetString("Email", dr["Email"].ToString());
                     HttpContext.Session.SetString("AdSoyad", dr["AdSoyad"].ToString());
-                    HttpContext.Session.SetString("TcKimlikNo", dr["TC"].ToString());
+                    HttpContext.Session.SetString("TC", dr["TC"].ToString());
                     string temaModu = dr["TemaModu"]?.ToString() ?? "dark";
                     string yaziBuyuk = dr["YaziBuyuk"]?.ToString() ?? "false";
 
@@ -127,7 +127,7 @@ namespace HastaneSistemi.Controllers
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand(@"
-INSERT INTO Hastalar (AdSoyad, DogumTarihi, Email, TcKimlikNo, Sifre, TemaModu, YaziBuyuk) 
+INSERT INTO Hastalar (AdSoyad, DogumTarihi, Email, TC, Sifre, TemaModu, YaziBuyuk) 
 VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7)", conn);
 
                 cmd.Parameters.AddWithValue("@p1", adSoyad);

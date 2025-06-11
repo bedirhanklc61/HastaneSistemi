@@ -28,7 +28,7 @@ namespace HastaneSistemi
             services.AddControllersWithViews();
             services.AddSession();
             services.AddDbContext<HastaneDbContext>(options =>
-    options.UseSqlServer("Data Source=127.0.0.1,1433;Initial Catalog=HastaneDB;User ID=sa;Password=12345;TrustServerCertificate=True;"));
+    options.UseSqlServer(Configuration.GetConnectionString("HastaneDB")));
 
 
         }

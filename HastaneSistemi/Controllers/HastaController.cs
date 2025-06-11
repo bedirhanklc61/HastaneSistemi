@@ -248,8 +248,8 @@ namespace HastaneSistemi.Controllers
             {
                 conn.Open();
                 var cmdKontrol = new SqlCommand(@"
-            SELECT COUNT(*) FROM Randevular
-            WHERE DoktorID = @doktorID AND Tarih = @tarih AND Saat = @saat", conn);
+    SELECT COUNT(*) FROM Randevular
+    WHERE DoktorID = @doktorID AND Tarih = @tarih AND Saat = @saat", conn);
                 cmdKontrol.Parameters.AddWithValue("@doktorID", model.DoktorID);
                 cmdKontrol.Parameters.AddWithValue("@tarih", model.Tarih);
                 cmdKontrol.Parameters.AddWithValue("@saat", model.Saat);
@@ -260,10 +260,11 @@ namespace HastaneSistemi.Controllers
                 if (randevuVar)
                     return BadRequest("Bu saat dolu.");
 
+
                 // Randevuyu kaydet
                 var cmdEkle = new SqlCommand(@"
-            INSERT INTO Randevular (TC, Bolum, DoktorID, Tarih, Saat)
-            VALUES (@tc, @bolum, @doktorID, @tarih, @saat)", conn);
+    INSERT INTO Randevular (TcKimlikNo, Bolum, DoktorID, Tarih, Saat)
+    VALUES (@tc, @bolum, @doktorID, @tarih, @saat)", conn);
                 cmdEkle.Parameters.AddWithValue("@tc", HttpContext.Session.GetString("TC"));
                 cmdEkle.Parameters.AddWithValue("@bolum", model.Bolum);
                 cmdEkle.Parameters.AddWithValue("@doktorID", model.DoktorID);
@@ -276,7 +277,8 @@ namespace HastaneSistemi.Controllers
         }
 
 
-        public JsonResult RandevulariGetir()
+
+        public JsonResult RandevulariGetir()    
         {
             string email = HttpContext.Session.GetString("Email");
             List<RandevuViewModel> randevular = new List<RandevuViewModel>();
@@ -407,7 +409,8 @@ namespace HastaneSistemi.Controllers
                 var dr = cmd.ExecuteReader();
                 while (dr.Read())
                 {
-                    doluSaatler.Add(((TimeSpan)dr["Saat"]).ToString(@"hh\:mm"));
+                    doluSaatler.Add(dr["Saat"].ToString());
+
                 }
             }
 
