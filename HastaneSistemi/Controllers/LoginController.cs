@@ -38,7 +38,7 @@ namespace HastaneSistemi.Controllers
                 }
 
                 // 0️⃣ Admin kontrolü
-                SqlCommand cmdAdmin = new SqlCommand("SELECT * FROM Adminler WHERE KullaniciAdi = @p1 AND Sifre = @p2", conn);
+                SqlCommand cmdAdmin = new SqlCommand("SELECT * FROM Adminler WHERE Email = @p1 AND Sifre = @p2", conn);
                 cmdAdmin.Parameters.AddWithValue("@p1", emailOrTc);
                 cmdAdmin.Parameters.AddWithValue("@p2", sifre);
 
@@ -79,7 +79,7 @@ namespace HastaneSistemi.Controllers
                 }
                 else
                 {
-                    cmd = new SqlCommand("SELECT * FROM Hastalar WHERE TcKimlikNo = @p1 AND Sifre = @p2", conn);
+                    cmd = new SqlCommand("SELECT * FROM Hastalar WHERE TC = @p1 AND Sifre = @p2", conn);
                 }
 
                 cmd.Parameters.AddWithValue("@p1", emailOrTc);
@@ -90,7 +90,7 @@ namespace HastaneSistemi.Controllers
                 {
                     HttpContext.Session.SetString("Email", dr["Email"].ToString());
                     HttpContext.Session.SetString("AdSoyad", dr["AdSoyad"].ToString());
-                    HttpContext.Session.SetString("TcKimlikNo", dr["TcKimlikNo"].ToString());
+                    HttpContext.Session.SetString("TcKimlikNo", dr["TC"].ToString());
                     string temaModu = dr["TemaModu"]?.ToString() ?? "dark";
                     string yaziBuyuk = dr["YaziBuyuk"]?.ToString() ?? "false";
 

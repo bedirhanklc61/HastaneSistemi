@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HastaneSistemi.Models
 {
+    [Table("Doktorlar")]
     public class DoktorBilgileri
 
     {

@@ -48,7 +48,7 @@ namespace HastaneSistemi.Controllers
                 conn.Open();
 
                 // TC'yi al
-                SqlCommand cmdTc = new SqlCommand("SELECT TcKimlikNo, YaziBuyuk FROM Hastalar WHERE Email = @p1", conn);
+                SqlCommand cmdTc = new SqlCommand("SELECT TC, YaziBuyuk FROM Hastalar WHERE Email = @p1", conn);
                 cmdTc.Parameters.AddWithValue("@p1", email);
                 SqlDataReader drTc = cmdTc.ExecuteReader();
 
@@ -57,7 +57,7 @@ namespace HastaneSistemi.Controllers
 
                 if (drTc.Read())
                 {
-                    tc = drTc["TcKimlikNo"].ToString();
+                    tc = drTc["TC"].ToString();
                     yaziBuyuk = Convert.ToBoolean(drTc["YaziBuyuk"]);
                 }
                 drTc.Close();
@@ -149,7 +149,7 @@ namespace HastaneSistemi.Controllers
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("SELECT AdSoyad, TcKimlikNo, Email, DogumTarihi, Sifre, TemaModu, YaziBuyuk FROM Hastalar WHERE Email = @p1", conn);
+                SqlCommand cmd = new SqlCommand("SELECT AdSoyad, TC, Email, DogumTarihi, Sifre, TemaModu, YaziBuyuk FROM Hastalar WHERE Email = @p1", conn);
                 cmd.Parameters.AddWithValue("@p1", email);
                 SqlDataReader dr = cmd.ExecuteReader();
                 if (dr.Read())
@@ -157,7 +157,7 @@ namespace HastaneSistemi.Controllers
                     model = new HastaBilgileri
                     {
                         AdSoyad = dr["AdSoyad"].ToString(),
-                        TC = dr["TcKimlikNo"].ToString(),
+                        TC = dr["TC"].ToString(),
                         Email = dr["Email"].ToString(),
                         DogumTarihi = Convert.ToDateTime(dr["DogumTarihi"]),
                         Sifre = dr["Sifre"].ToString(),
@@ -262,9 +262,9 @@ namespace HastaneSistemi.Controllers
 
                 // Randevuyu kaydet
                 var cmdEkle = new SqlCommand(@"
-            INSERT INTO Randevular (TcKimlikNo, Bolum, DoktorID, Tarih, Saat)
+            INSERT INTO Randevular (TC, Bolum, DoktorID, Tarih, Saat)
             VALUES (@tc, @bolum, @doktorID, @tarih, @saat)", conn);
-                cmdEkle.Parameters.AddWithValue("@tc", HttpContext.Session.GetString("TcKimlikNo"));
+                cmdEkle.Parameters.AddWithValue("@tc", HttpContext.Session.GetString("TC"));
                 cmdEkle.Parameters.AddWithValue("@bolum", model.Bolum);
                 cmdEkle.Parameters.AddWithValue("@doktorID", model.DoktorID);
                 cmdEkle.Parameters.AddWithValue("@tarih", model.Tarih);
@@ -286,7 +286,7 @@ namespace HastaneSistemi.Controllers
                 conn.Open();
 
                 // Email'den hastanın TcKimlikNo'sunu al
-                SqlCommand cmdTc = new SqlCommand("SELECT TcKimlikNo FROM Hastalar WHERE Email = @p1", conn);
+                SqlCommand cmdTc = new SqlCommand("SELECT TC FROM Hastalar WHERE Email = @p1", conn);
                 cmdTc.Parameters.AddWithValue("@p1", email);
                 string tc = cmdTc.ExecuteScalar()?.ToString();
 

@@ -17,6 +17,8 @@ namespace HastaneSistemi.Models
         public DbSet<HastaBilgileri> Hastalar { get; set; }
         public DbSet<RandevuBilgisi> Randevular { get; set; }
         public DbSet<DoktorUygunluk> DoktorUygunluklar { get; set; }
+        public DbSet<AdminBilgileri> Adminler { get; set; }
+
     }
 }
 
