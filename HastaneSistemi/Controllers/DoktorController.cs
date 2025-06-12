@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using HastaneSistemi.Models;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 
 
@@ -12,7 +13,12 @@ namespace HastaneSistemi.Controllers
 {
     public class DoktorController : Controller
     {
-        private readonly string _connectionString = "Data Source=127.0.0.1,1433\\SQLEXPRESS;Initial Catalog=HastaneDB;User ID=sa;Password=12345;TrustServerCertificate=True;";
+        private readonly string _connectionString;
+
+        public DoktorController(IConfiguration configuration)
+        {
+            _connectionString = configuration.GetConnectionString("HastaneDB");
+        }
 
         public IActionResult DoktorPanel()
         {

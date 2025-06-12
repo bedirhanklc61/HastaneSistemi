@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Reflection;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 
 
@@ -22,14 +23,13 @@ namespace HastaneSistemi.Controllers
 {
     public class HastaController : Controller
     {
-        private readonly string _connectionString = "Data Source=127.0.0.1,1433;Initial Catalog=HastaneDB;User ID=sa;Password=12345;TrustServerCertificate=True;";
+        private readonly string _connectionString;
         private readonly HastaneDbContext _context;
 
-        
-
-        public HastaController(HastaneDbContext context)
+        public HastaController(HastaneDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _connectionString = configuration.GetConnectionString("HastaneDB");
         }
 
 
