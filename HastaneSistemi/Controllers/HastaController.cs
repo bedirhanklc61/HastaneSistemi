@@ -6,30 +6,23 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Reflection;
+using Microsoft.AspNetCore.Identity;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 
-
-
-public class Doktor
-{
-    public int DoktorID { get; set; }
-    public string AdSoyad { get; set; }
-    public string Bolum { get; set; }
-}
 
 namespace HastaneSistemi.Controllers
 {
     public class HastaController : Controller
     {
-        private readonly string _connectionString = "Data Source=127.0.0.1,1433;Initial Catalog=HastaneDB;User ID=sa;Password=12345;TrustServerCertificate=True;";
+        private readonly string _connectionString;
         private readonly HastaneDbContext _context;
 
-        
-
-        public HastaController(HastaneDbContext context)
+        public HastaController(HastaneDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _connectionString = configuration.GetConnectionString("HastaneDB");
         }
 
 
@@ -192,13 +185,15 @@ namespace HastaneSistemi.Controllers
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand(@"
-            UPDATE Hastalar 
+            UPDATE Hastalar
             SET Email = @p1, DogumTarihi = @p2, Sifre = @p3, TemaModu = @p4, YaziBuyuk = @p5 
             WHERE Email = @p6", conn);
+                var hasher = new PasswordHasher<HastaBilgileri>();
+                string hashed = hasher.HashPassword(null, model.Sifre);
 
                 cmd.Parameters.AddWithValue("@p1", model.Email);
                 cmd.Parameters.AddWithValue("@p2", model.DogumTarihi);
-                cmd.Parameters.AddWithValue("@p3", model.Sifre);
+                cmd.Parameters.AddWithValue("@p3", hashed);
                 cmd.Parameters.AddWithValue("@p4", model.TemaModu);
                 cmd.Parameters.AddWithValue("@p5", yaziBuyuk);
                 cmd.Parameters.AddWithValue("@p6", email);
