@@ -187,8 +187,7 @@ VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7)", conn);
             return RedirectToAction("Index", "Login");
         }
 
-
-
+        
         public IActionResult CikisYap()
         {
             HttpContext.Session.Clear(); // Tüm oturum bilgilerini temizle
