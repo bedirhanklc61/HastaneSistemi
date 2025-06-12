@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using HastaneSistemi.Models;
 using System;
 using System.Collections.Generic;
@@ -211,6 +211,7 @@ namespace HastaneSistemi.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult TemaDegistir([FromBody] JsonElement data)
         {
             string yeniTema = data.GetProperty("tema").GetString();
@@ -235,6 +236,7 @@ namespace HastaneSistemi.Controllers
             return Ok();
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult RandevuOlustur([FromBody] RandevuModel model)
         {
             // Daha önceden o saatte randevu var mı?
@@ -315,6 +317,7 @@ namespace HastaneSistemi.Controllers
             return Json(randevular);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult RandevuIptalEt([FromBody] JsonElement data)
         {
             if (!data.TryGetProperty("randevuID", out JsonElement idElement))
@@ -335,9 +338,23 @@ namespace HastaneSistemi.Controllers
                 return BadRequest("ID dönüştürülemedi");
             }
 
+            string tc = HttpContext.Session.GetString("TC");
+            if (string.IsNullOrEmpty(tc))
+                return Unauthorized();
+
+
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
+
+                var kontrolCmd = new SqlCommand("SELECT COUNT(*) FROM Randevular WHERE RandevuID = @id AND TcKimlikNo = @tc", conn);
+                kontrolCmd.Parameters.AddWithValue("@id", randevuID);
+                kontrolCmd.Parameters.AddWithValue("@tc", tc);
+                int sahipMi = (int)kontrolCmd.ExecuteScalar();
+
+                if (sahipMi == 0)
+                    return Unauthorized();
+
                 SqlCommand cmd = new SqlCommand("DELETE FROM Randevular WHERE RandevuID = @id", conn);
                 cmd.Parameters.AddWithValue("@id", randevuID);
                 int sonuc = cmd.ExecuteNonQuery();

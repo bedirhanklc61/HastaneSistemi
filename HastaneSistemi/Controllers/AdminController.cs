@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using HastaneSistemi.Models;
 using System.Collections.Generic;
 using System;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 

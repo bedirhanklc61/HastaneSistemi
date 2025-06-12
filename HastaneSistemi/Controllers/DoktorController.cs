@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
 using System;
 using HastaneSistemi.Models;
@@ -90,14 +90,29 @@ namespace HastaneSistemi.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult RandevuIptalEt([FromBody] int randevuID)
         {
             if (randevuID <= 0)
                 return BadRequest("Geçersiz randevu ID.");
 
+            int? doktorID = HttpContext.Session.GetInt32("DoktorID");
+            if (doktorID == null)
+                return Unauthorized();
+
+
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
+
+                var kontrolCmd = new SqlCommand("SELECT COUNT(*) FROM Randevular WHERE RandevuID = @id AND DoktorID = @dId", conn);
+                kontrolCmd.Parameters.AddWithValue("@id", randevuID);
+                kontrolCmd.Parameters.AddWithValue("@dId", doktorID.Value);
+                int sahipMi = (int)kontrolCmd.ExecuteScalar();
+
+                if (sahipMi == 0)
+                    return Unauthorized();
+
                 SqlCommand cmd = new SqlCommand("DELETE FROM Randevular WHERE RandevuID = @id", conn);
                 cmd.Parameters.AddWithValue("@id", randevuID);
                 int sonuc = cmd.ExecuteNonQuery();

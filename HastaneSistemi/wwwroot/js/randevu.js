@@ -1,5 +1,6 @@
 // Global doktor listesi
 let doktorVerileri = [];
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 // Sayfa yüklendiğinde poliklinik ve doktor verilerini getir
 window.addEventListener("DOMContentLoaded", () => {
@@ -58,24 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
-});
-
-
-
-// Sayfa yüklendiğinde doktorları al ve kartları oluştur
-// Sayfa yüklendiğinde hem doktor hem poliklinikleri al
-window.addEventListener("DOMContentLoaded", () => {
-    Promise.all([
-        fetch('/Hasta/PoliklinikleriGetir').then(res => res.json()),
-        fetch('/Hasta/DoktorlariGetir').then(res => res.json())
-    ])
-        .then(([poliklinikVerileri, doktorlar]) => {
-            doktorVerileri = doktorlar;
-            kartlariOlustur(poliklinikVerileri); // 💡 artık parametre alıyor
-        })
-        .catch(err => {
-            console.error("Veri getirme hatası:", err);
-        });
 });
 
 
@@ -283,7 +266,10 @@ function kartlariOlustur(poliklinikVerileri) {
 
             fetch('/Hasta/RandevuOlustur', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': csrfToken
+                },
                 body: JSON.stringify({
                     bolum: bolum,
                     doktorID: doktorID,

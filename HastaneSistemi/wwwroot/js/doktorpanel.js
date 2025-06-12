@@ -1,4 +1,6 @@
-﻿// Arama filtresi
+﻿
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+// Arama filtresi
 document.getElementById('search-input').addEventListener('keyup', function () {
     const filter = this.value.toLowerCase();
     document.querySelectorAll('.randevu-card').forEach(card => {
@@ -17,7 +19,7 @@ function attachListeners() {
             const card = this.closest('.randevu-card');
             fetch('/Doktor/RandevuIptalEt', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': csrfToken },
                 body: JSON.stringify({ randevuID: id })
             }).then(res => {
                 if (res.ok) card.remove();
@@ -47,7 +49,7 @@ function attachListeners() {
 
             fetch('/Doktor/RandevuIptalEt', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': csrfToken },
                 body: JSON.stringify(randevuId)
             })
                 .then(res => {
