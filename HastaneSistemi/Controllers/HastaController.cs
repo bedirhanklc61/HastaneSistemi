@@ -185,16 +185,27 @@ namespace HastaneSistemi.Controllers
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand(@"
+                SqlCommand cmd;
+                if (!string.IsNullOrEmpty(model.Sifre))
+                {
+                    cmd = new SqlCommand(@"
             UPDATE Hastalar
-            SET Email = @p1, DogumTarihi = @p2, Sifre = @p3, TemaModu = @p4, YaziBuyuk = @p5 
+            SET Email = @p1, DogumTarihi = @p2, Sifre = @p3, TemaModu = @p4, YaziBuyuk = @p5
             WHERE Email = @p6", conn);
-                var hasher = new PasswordHasher<HastaBilgileri>();
-                string hashed = hasher.HashPassword(null, model.Sifre);
+                    var hasher = new PasswordHasher<HastaBilgileri>();
+                    string hashed = hasher.HashPassword(null, model.Sifre);
+                    cmd.Parameters.AddWithValue("@p3", hashed);
+                }
+                else
+                {
+                    cmd = new SqlCommand(@"
+            UPDATE Hastalar
+            SET Email = @p1, DogumTarihi = @p2, TemaModu = @p4, YaziBuyuk = @p5
+            WHERE Email = @p6", conn);
+                }
 
                 cmd.Parameters.AddWithValue("@p1", model.Email);
                 cmd.Parameters.AddWithValue("@p2", model.DogumTarihi);
-                cmd.Parameters.AddWithValue("@p3", hashed);
                 cmd.Parameters.AddWithValue("@p4", model.TemaModu);
                 cmd.Parameters.AddWithValue("@p5", yaziBuyuk);
                 cmd.Parameters.AddWithValue("@p6", email);

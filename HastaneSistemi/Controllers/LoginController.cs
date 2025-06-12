@@ -50,7 +50,16 @@ namespace HastaneSistemi.Controllers
                 {
                     string hashed = drAdmin["Sifre"].ToString();
                     var hasher = new PasswordHasher<AdminBilgileri>();
-                    if (hasher.VerifyHashedPassword(null, hashed, sifre) == PasswordVerificationResult.Success)
+                    bool valid = false;
+                    try
+                    {
+                        valid = hasher.VerifyHashedPassword(null, hashed, sifre) == PasswordVerificationResult.Success;
+                    }
+                    catch (FormatException)
+                    {
+                        valid = hashed == sifre;
+                    }
+                    if (valid)
                     {
                         HttpContext.Session.SetString("Email", drAdmin["Email"].ToString());
                         HttpContext.Session.SetString("KullaniciTipi", "Admin");
@@ -71,7 +80,16 @@ namespace HastaneSistemi.Controllers
                     {
                         string hashed = drDoktor["Sifre"].ToString();
                         var hasher = new PasswordHasher<DoktorBilgileri>();
-                        if (hasher.VerifyHashedPassword(null, hashed, sifre) == PasswordVerificationResult.Success)
+                        bool valid = false;
+                        try
+                        {
+                            valid = hasher.VerifyHashedPassword(null, hashed, sifre) == PasswordVerificationResult.Success;
+                        }
+                        catch (FormatException)
+                        {
+                            valid = hashed == sifre;
+                        }
+                        if (valid)
                         {
                             HttpContext.Session.SetString("Email", drDoktor["Email"].ToString());
                             HttpContext.Session.SetString("AdSoyad", drDoktor["AdSoyad"].ToString());
@@ -101,7 +119,16 @@ namespace HastaneSistemi.Controllers
                 {
                     string hashed = dr["Sifre"].ToString();
                     var hasher = new PasswordHasher<HastaBilgileri>();
-                    if (hasher.VerifyHashedPassword(null, hashed, sifre) == PasswordVerificationResult.Success)
+                    bool valid = false;
+                    try
+                    {
+                        valid = hasher.VerifyHashedPassword(null, hashed, sifre) == PasswordVerificationResult.Success;
+                    }
+                    catch (FormatException)
+                    {
+                        valid = hashed == sifre;
+                    }
+                    if (valid)
                     {
                         HttpContext.Session.SetString("Email", dr["Email"].ToString());
                         HttpContext.Session.SetString("AdSoyad", dr["AdSoyad"].ToString());

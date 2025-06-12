@@ -241,10 +241,18 @@ namespace HastaneSistemi.Controllers
             using (var conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                var cmd = new SqlCommand("UPDATE Doktorlar SET Sifre = @sifre, TemaModu = @tema WHERE Email = @Email", conn);
-                var hasher = new PasswordHasher<DoktorBilgileri>();
-                string hashed = hasher.HashPassword(null, model.Sifre);
-                cmd.Parameters.AddWithValue("@sifre", hashed);
+                SqlCommand cmd;
+                if (!string.IsNullOrEmpty(model.Sifre))
+                {
+                    cmd = new SqlCommand("UPDATE Doktorlar SET Sifre = @sifre, TemaModu = @tema WHERE Email = @Email", conn);
+                    var hasher = new PasswordHasher<DoktorBilgileri>();
+                    string hashed = hasher.HashPassword(null, model.Sifre);
+                    cmd.Parameters.AddWithValue("@sifre", hashed);
+                }
+                else
+                {
+                    cmd = new SqlCommand("UPDATE Doktorlar SET TemaModu = @tema WHERE Email = @Email", conn);
+                }
                 cmd.Parameters.AddWithValue("@tema", model.TemaModu);
                 cmd.Parameters.AddWithValue("@Email", email);
                 cmd.ExecuteNonQuery();

@@ -31,3 +31,16 @@ if (temaSwitch) {
         setThemeInputValue(mode);
     });
 }
+
+// Yazı büyüklüğü değişimi
+const yaziBuyukSwitch = document.getElementById('yaziBuyukSwitch');
+
+if (yaziBuyukSwitch) {
+    yaziBuyukSwitch.addEventListener('change', function () {
+        if (yaziBuyukSwitch.checked) {
+            document.body.classList.add('large-text');
+        } else {
+            document.body.classList.remove('large-text');
+        }
+    });
+}
