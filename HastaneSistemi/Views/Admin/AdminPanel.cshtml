@@ -43,6 +43,7 @@
         <div id="doktor" class="section mt-4" style="display:none;">
             <h4>👨‍⚕️ Yeni Doktor Ekle</h4>
             <form method="post" action="/Admin/DoktorEkle">
+                @Html.AntiForgeryToken()
                 <div class="form-group">
                     <label>Ad Soyad</label>
                     <input name="AdSoyad" class="form-control" required />
@@ -91,6 +92,7 @@
                             <td>@doktor.Bolum</td>
                             <td>
                                 <form method="post" action="/Admin/DoktorSil" onsubmit="return confirm('Silmek istediğine emin misiniz?')">
+                                    @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@doktor.DoktorID" />
                                     <button type="submit" class="btn btn-sm btn-danger">Sil</button>
                                 </form>
@@ -106,6 +108,7 @@
         <!-- Modal -->
         <div id="uygunlukModal" style="display:none;" class="modal">
             <form method="post" action="/Admin/UygunlukAyarla" class="modal-content">
+                @Html.AntiForgeryToken()
                 <h5 class="mb-3">Müsaitlik Aralığı Belirle</h5>
                 <input type="hidden" name="DoktorID" id="modalDoktorID" />
                 <div class="form-group">
@@ -166,6 +169,7 @@
         <div id="poliklinik" class="section mt-4" style="display:none;">
             <h4>🏥 Yeni Poliklinik Ekle</h4>
             <form method="post" action="/Admin/PoliklinikEkle">
+                @Html.AntiForgeryToken()
                 <div class="form-group">
                     <label>Poliklinik Adı</label>
                     <input name="Ad" class="form-control" required />
@@ -193,6 +197,7 @@
                             <td><i class="uil @item.Ikon"></i> @item.Ikon</td>
                             <td>
                                 <form method="post" action="/Admin/PoliklinikSil" onsubmit="return confirm('Silmek istediğine emin misin?')">
+                                    @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@item.PoliklinikID" />
                                     <button type="submit" class="btn btn-sm btn-danger">Sil</button>
                                 </form>

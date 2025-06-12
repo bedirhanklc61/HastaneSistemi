@@ -158,8 +158,9 @@ namespace HastaneSistemi.Controllers
             return View(model);
         }
 
-        // POST: Doktor/UygunlukAyarla
+    
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult UygunlukAyarla(DoktorUygunluk model)
         {
             int? doktorID = HttpContext.Session.GetInt32("DoktorID");
@@ -217,6 +218,7 @@ namespace HastaneSistemi.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult AyarlarGuncelle(DoktorBilgileri model)
         {
             string email = HttpContext.Session.GetString("Email");

@@ -16,6 +16,7 @@
     <h2 class="mb-4">📅 Randevu Uygunluk Aralığı Belirle</h2>
 
     <form asp-action="UygunlukAyarla" asp-controller="Doktor" method="post">
+        @Html.AntiForgeryToken()
         <div class="form-group">
             <label>Başlangıç Tarihi</label>
             <input asp-for="BaslangicTarih" type="date" class="form-control" />

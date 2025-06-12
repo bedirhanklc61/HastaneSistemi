@@ -168,6 +168,7 @@ namespace HastaneSistemi.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult AyarlarGuncelle(HastaBilgileri model)
         {
             string email = HttpContext.Session.GetString("Email");

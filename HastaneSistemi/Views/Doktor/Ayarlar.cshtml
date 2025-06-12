@@ -25,6 +25,7 @@
         <h2 class="text-center mb-4">Doktor Ayarları</h2>
 
         <form method="post" action="/Doktor/AyarlarGuncelle">
+            @Html.AntiForgeryToken()
             <div class="form-group">
                 <label>Ad Soyad</label>
                 <input type="text" class="form-control" value="@Model.AdSoyad" readonly>

@@ -114,6 +114,7 @@ namespace HastaneSistemi.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult DoktorEkle(IFormCollection form)
         {
             string adSoyad = form["AdSoyad"];
@@ -185,6 +186,7 @@ namespace HastaneSistemi.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult PoliklinikEkle(IFormCollection form)
         {
             string ad = form["Ad"];
@@ -202,6 +204,7 @@ namespace HastaneSistemi.Controllers
             return RedirectToAction("AdminPanel");
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult PoliklinikSil(int id)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -215,6 +218,7 @@ namespace HastaneSistemi.Controllers
             return RedirectToAction("AdminPanel");
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult DoktorSil(int id)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -228,6 +232,7 @@ namespace HastaneSistemi.Controllers
             return RedirectToAction("AdminPanel");
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult UygunlukAyarla(DoktorUygunluk uygunluk)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))

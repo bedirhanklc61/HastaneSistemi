@@ -5,7 +5,7 @@ Bu proje ASP.NET Core MVC ile gelistirilmis basit bir hastane otomasyon uygulama
 ## Gereksinimler
 
 - **.NET 5 SDK**
-- Microsoft SQL Server (varsayilan baglanti dizesi `appsettings.json` dosyasinda bulunur)
+- Microsoft SQL Server (baglanti dizesi calisma zamaninda saglanmalidir)
 
 ## Projeyi Derlemek ve Calistirmak
 
@@ -26,7 +26,20 @@ Bu proje ASP.NET Core MVC ile gelistirilmis basit bir hastane otomasyon uygulama
 
 ## Veritabani Olusturma
 
-Proje, SQL Server kullanarak `HastaneDB` adinda bir veritabani bekler. Gerekirse `appsettings.json` dosyasindaki `HastaneDB` baglanti dizesini guncelleyebilir ve asagidaki komutla var olan girisleri veritabanina uygulayabilirsiniz:
+Proje, SQL Server kullanarak `HastaneDB` adinda bir veritabani bekler. `ConnectionStrings:HastaneDB` degeri calisma zamaninda ayarlanmalidir. Baglanti dizesini asagidaki sekillerden biriyle belirleyebilirsiniz:
+
+1. **User secrets** kullanarak:
+   ```bash
+   cd HastaneSistemi
+   dotnet user-secrets init
+   dotnet user-secrets set "ConnectionStrings:HastaneDB" "<SizinBaglantiDizeniz>"
+   ```
+2. Veya bir ortam degiskeni tanimlayarak:
+   ```bash
+   export ConnectionStrings__HastaneDB="<SizinBaglantiDizeniz>"
+   ```
+
+Baglanti dizesi tanimlandiktan sonra mevcut girisleri veritabanina uygulamak icin su komutu kullanabilirsiniz:
 
 ```bash
  dotnet ef database update --project HastaneSistemi

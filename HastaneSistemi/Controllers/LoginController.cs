@@ -26,6 +26,7 @@ namespace HastaneSistemi.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult GirisYap(string emailOrTc, string sifre)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -124,6 +125,7 @@ namespace HastaneSistemi.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult KayitOl(IFormCollection form)
         {
             string adSoyad = form["adsoyad"];
