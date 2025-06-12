@@ -50,7 +50,7 @@ function attachListeners() {
             fetch('/Doktor/RandevuIptalEt', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': csrfToken },
-                body: JSON.stringify(randevuId)
+                body: JSON.stringify({ randevuID: randevuId })
             })
                 .then(res => {
                     if (res.ok) {
