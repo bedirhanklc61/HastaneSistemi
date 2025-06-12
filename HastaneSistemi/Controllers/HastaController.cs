@@ -153,7 +153,7 @@ namespace HastaneSistemi.Controllers
                         TC = dr["TC"].ToString(),
                         Email = dr["Email"].ToString(),
                         DogumTarihi = Convert.ToDateTime(dr["DogumTarihi"]),
-                        Sifre = dr["Sifre"].ToString(),
+                        Sifre = string.Empty,
                         TemaModu = dr["TemaModu"].ToString(),
                         YaziBuyuk = Convert.ToBoolean(dr["YaziBuyuk"])
                     };

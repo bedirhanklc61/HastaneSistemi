@@ -223,7 +223,7 @@ namespace HastaneSistemi.Controllers
                     {
                         AdSoyad = dr["AdSoyad"].ToString(),
                         Email = dr["Email"].ToString(),
-                        Sifre = dr["Sifre"].ToString(),
+                        Sifre = string.Empty,
                         TemaModu = dr["TemaModu"].ToString()
                     };
                 }
