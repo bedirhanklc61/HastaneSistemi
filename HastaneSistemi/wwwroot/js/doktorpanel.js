@@ -73,6 +73,7 @@ function attachListeners() {
 attachListeners();
 
 document.addEventListener('DOMContentLoaded', function () {
+    applyThemeFromInput();
     const userIcon = document.getElementById('user-icon');
     const dropdownMenu = document.getElementById('dropdown-menu');
 

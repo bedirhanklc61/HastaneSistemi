@@ -16,24 +16,18 @@ sifreToggle.addEventListener('click', () => {
 
 // Tema değişimi
 const temaSwitch = document.getElementById('temaSwitch');
-const temaInput = document.getElementById('TemaModuInput');
 
 document.addEventListener('DOMContentLoaded', function () {
-    if (temaInput && temaInput.value === 'light') {
-        document.body.classList.add('light-mode');
-        temaSwitch.checked = true;
-    } else {
-        document.body.classList.remove('light-mode');
-        temaSwitch.checked = false;
+    applyThemeFromInput();
+    if (temaSwitch) {
+        temaSwitch.checked = getThemeInputValue() === 'light';
     }
 });
 
-temaSwitch.addEventListener('change', function () {
-    if (temaSwitch.checked) {
-        document.body.classList.add('light-mode');
-        temaInput.value = 'light';
-    } else {
-        document.body.classList.remove('light-mode');
-        temaInput.value = 'dark';
-    }
-});
+if (temaSwitch) {
+    temaSwitch.addEventListener('change', function () {
+        const mode = temaSwitch.checked ? 'light' : 'dark';
+        applyTheme(mode);
+        setThemeInputValue(mode);
+    });
+}

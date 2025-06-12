@@ -1,7 +1,7 @@
 ﻿/* Genel sayfa düzeni */
 body {
-    background-color: #1f2029;
-    color: #ffeba7;
+    background-color: var(--bg-dark);
+    color: var(--primary-color);
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 20px;
@@ -12,7 +12,7 @@ h2 {
     text-align: center;
     margin-bottom: 30px;
     font-weight: bold;
-    color: #ffeba7;
+    color: var(--primary-color);
 }
 /* Kart kutusu */
 .card {
@@ -21,7 +21,7 @@ h2 {
     border-radius: 12px;
     padding: 25px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    color: #ffeba7;
+    color: var(--primary-color);
     transition: transform 0.3s ease;
 }
 
@@ -34,17 +34,17 @@ h2 {
         margin-bottom: 20px;
         font-size: 1.4rem;
         font-weight: bold;
-        color: #ffd700;
+        color: var(--highlight-color);
     }
 
     /* Form elemanları */
     .card input[type="text"],
     .card select {
-        background-color: #1f2029;
+        background-color: var(--bg-dark);
         border: 1px solid #555;
         border-radius: 8px;
         padding: 10px 15px;
-        color: #ffeba7;
+        color: var(--primary-color);
         width: 100%;
         margin-bottom: 15px;
     }
@@ -55,9 +55,9 @@ h2 {
 
     /* Ekle butonu */
     .card .btn-primary {
-        background-color: #ffeba7;
+        background-color: var(--primary-color);
         border: none;
-        color: #1f2029;
+        color: var(--bg-dark);
         font-weight: bold;
         border-radius: 8px;
         padding: 10px 20px;
@@ -65,12 +65,12 @@ h2 {
     }
 
         .card .btn-primary:hover {
-            background-color: #ffd700;
-            color: #1f2029;
+            background-color: var(--highlight-color);
+            color: var(--bg-dark);
         }
 .admin-table {
-    color: #ffeba7; /* Açık sarı, gece modu için uyumlu */
-    background-color: #1f2029; /* Koyu arka plan */
+    color: var(--primary-color); /* Açık sarı, gece modu için uyumlu */
+    background-color: var(--bg-dark);
     border-collapse: collapse;
     width: 100%;
 }
@@ -83,7 +83,7 @@ h2 {
 
     .admin-table th {
         background-color: #2b2e38;
-        color: #ffeba7;
+        color: var(--primary-color);
     }
 
     .admin-table tr:nth-child(even) {

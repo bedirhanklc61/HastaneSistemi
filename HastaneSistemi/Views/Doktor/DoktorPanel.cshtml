@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/css/doktorpanel.css">
+    <link rel="stylesheet" href="~/css/variables.css" />
     <link rel="stylesheet" href="~/css/ayarlar.css">
     <style>
         .filter-btn {
@@ -40,6 +41,7 @@
     </style>
 </head>
 <body class="@(ViewBag.TemaModu == "light" ? "light-mode" : "")">
+    <input type="hidden" id="TemaModuInput" value="@ViewBag.TemaModu" />
     <div class="top-bar">
         <div class="user-menu">
             <button id="user-icon" class="user-btn"><i class="uil uil-user"></i></button>
@@ -114,6 +116,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/doktorpanel.js"></script>
+    <script src="~/js/common.js"></script>
     <script>
         let aktifFiltre = "gelecek";
 

@@ -34,15 +34,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Tema uygulaması
-    const temaInput = document.getElementById("TemaModuInput");
-    if (temaInput) {
-        if (temaInput.value === "light") {
-            document.body.classList.add("light-mode");
-        } else {
-            document.body.classList.remove("light-mode");
-        }
-    }
+    // Tema uygulama
+    applyThemeFromInput();
 });
 
 document.addEventListener('DOMContentLoaded', function () {

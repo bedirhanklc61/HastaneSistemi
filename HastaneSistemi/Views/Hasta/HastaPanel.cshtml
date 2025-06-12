@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/css/panel.css">
+    <link rel="stylesheet" href="~/css/variables.css" />
 </head>
 <body class="@(Context.Session.GetString("TemaModu") == "light" ? "light-mode" : "") @(Context.Session.GetString("YaziBuyuk") == "True" ? "large-text" : "")">
 
@@ -62,7 +63,7 @@
         </div>
 
     </div>
-
+    <script src="~/js/common.js"></script>
     <script src="~/js/panel.js"></script>
 
 </body>

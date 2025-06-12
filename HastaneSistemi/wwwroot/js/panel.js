@@ -15,15 +15,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Tema uygulama (veritabanından gelen input'a göre)
-    const temaInput = document.getElementById("TemaModuInput");
-    if (temaInput) {
-        if (temaInput.value === "light") {
-            document.body.classList.add("light-mode");
-        } else {
-            document.body.classList.remove("light-mode");
-        }
-    }
+    // Tema uygulama
+    applyThemeFromInput();
 
     // Randevu listeleme işlemleri
     const randevuListesi = document.getElementById("randevu-listesi");

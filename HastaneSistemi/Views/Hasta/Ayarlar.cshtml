@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/css/ayarlar.css">
+    <link rel="stylesheet" href="~/css/variables.css" />
 </head>
 <body class="@(Context.Session.GetString("TemaModu") == "light" ? "light-mode" : "") @(Context.Session.GetString("YaziBuyuk") == "true" ? "large-text" : "")">
 
@@ -53,7 +54,7 @@
             <div class="form-group">
                 <label>Şifre</label>
                 <div class="password-field">
-                    <input type="password" id="sifre" class="form-control" name="Sifre" placeholder="Yeni şifre" required>
+                    <input type="password" id="sifre" class="form-control" name="Sifre" placeholder="Yeni şifre">
                     <i class="uil uil-eye password-toggle" id="sifre-toggle"></i>
                 </div>
             </div>
@@ -80,7 +81,7 @@
             <button type="submit" class="btn btn-primary mt-4">Kaydet</button>
         </form>
     </div>
-
+    <script src="~/js/common.js"></script>
     <script src="~/js/ayarlar.js"></script>
 </body>
 </html>
