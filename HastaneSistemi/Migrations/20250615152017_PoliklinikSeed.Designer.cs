@@ -4,14 +4,16 @@ using HastaneSistemi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HastaneSistemi.Migrations
 {
     [DbContext(typeof(HastaneDbContext))]
-    partial class HastaneDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250615152017_PoliklinikSeed")]
+    partial class PoliklinikSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
