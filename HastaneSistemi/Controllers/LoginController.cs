@@ -193,5 +193,13 @@ VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7)", conn);
             HttpContext.Session.Clear(); // Tüm oturum bilgilerini temizle
             return RedirectToAction("Index", "Login");
         }
+
+        public IActionResult HashUret()
+        {
+            var hasher = new PasswordHasher<string>();
+            string hashed = hasher.HashPassword(null, "1234");
+            return Content("Hashli Şifre: " + hashed);
+        }
+
     }
 }
